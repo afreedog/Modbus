@@ -7,8 +7,6 @@ Widget::Widget(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setFixedSize(700,750);
-
     tcpServer = new QTcpServer(this);
 
     //初始化服务器

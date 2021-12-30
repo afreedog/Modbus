@@ -64,41 +64,6 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
-    //响应报文结构体
-    typedef struct TcpResponseMessageInformation{
-        //事务元标识符
-        quint16 TransactionIdenti;
-        //协议标识符
-        quint16 ProtocolIdenti;
-        //后续字符的字节长度
-        quint16 Length;
-        //单元标识符
-        quint8 UintIdenti;
-        //功能码
-        quint8 FunctionCode;
-        //读取数据的字节数量
-        quint16 DataByteNumber;
-        //数据字符数组
-        QByteArray Data;
-    }TcpResponseMessageInformation;
-
-    //请求报文结构体
-    typedef struct TcpRequestMessageInformation{
-        //事务元标识符
-        quint16 TransactionIdenti;
-        //协议标识符
-        quint16 ProtocolIdenti;
-        //基础长度
-        quint16 Length;
-        //单元标识符
-        quint8 Uintidentical;
-        //功能码
-        quint8 FunctionCode;
-        //起始地址
-        quint16 BeginAddress;
-        //数量
-        quint16 Number;
-    }TcpRequestMessageInfomation;
 
     //默认的服务器ip地址和端口号
     QString defaultIpAddress = "127.0.0.1";
