@@ -23,21 +23,19 @@
 #include "inputdialog.h"
 
 //Macro
+#define RECORD_FILE_PATH  "../ModBus_TCP_master/record.txt"
 #define MAXSLAVENUMBER 247    //从机地址个数最大为247
 #define CLOCK_REFRESH 500  //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss dddd"  //时钟显示格式
 #define WAITE_FOR_CONNECT 3000  //设置等待连接时间
-#define WAITE_FOR_RESPONSE 5000 //设置响应报文超时时长5000ms
+#define WAITE_FOR_RESPONSE 3000 //设置响应报文超时时长5000ms
 #define RESENDNUMBER 3        //设置超时重发次数为3次
-
 #define ADDRESS_MIN 0  //线圈和寄存器的地址最小值
 #define ADDRESS_MAX 65535  //线圈和寄存器的地址最大值
-
 #define READ_COIL_MINNUM 1  //请求报文读取线圈个数的最小值
 #define READ_COIL_MAXNUM 2000  //请求报文读取线圈个数的最大值
 #define READ_REGISTER_MINNUM 1 //请求报文读取寄存器个数的最小值
 #define READ_REGISTER_MAXNUM 125 //请求报文读取寄存器个数的最大值
-
 #define WRITE_COIL_MINNUM 1  //请求报文写入线圈个数的最小值
 #define WRITE_COIL_MAXNUM 1968  //请求报文写入线圈个数的最大值
 #define WRITE_REGISTER_MINNUM 1 //请求报文写入寄存器个数的最小值
@@ -61,6 +59,7 @@ public:
     //设置默认服务器IP地址和端口号
     QString defaultIpAddress = "127.0.0.1";
     qint16 defaultPortAddress = 502;
+
     //设置TCP连接状态标识符，默认为断开状态
     bool TcpConnectIdentifier = false;
     //设置TCP请求报文发送状态，设置在线请求报文只能有一个，默认为未发送状态
@@ -69,17 +68,16 @@ public:
     int resendNumber;
     //初始化请求报文数组
     QByteArray requestMessage;
-
     //MBAP事务元标识符
     quint16 transactionIdentifier = 0;
 
     //多线圈字符串合法性判断函数
     bool coilsLegality(QString &coils);
+
     //字节反转函数
     void byteReverse(QString &coils);
     //数组转十六进制字符串
     QString HexByteArrayToHexString(QByteArray HexByteArr,int ConvertLen, int pattern);
-
     //请求报文公共信息结构体
     typedef struct MessageBasicInformation
     {
@@ -101,7 +99,6 @@ public:
 
     //TCP主站发送请求报文函数
     void TCPRequestMessage(int funcCodeIndex);
-
     //结构体初始化函数
     void structInitialize(MessageBasicInformation *structPt);
     //读输出线圈0x01和读输出寄存器0x03请求报文处理函数
@@ -117,7 +114,6 @@ public:
     void RequestMessage0x0F0x10();
     //写多个输出线圈0x0F和写多个输出寄存器0x10请求报构建函数
     QByteArray RequestMessage0x0F0x10Build(MessageBasicInformation *structPt, QByteArray byteArr);
-
     //TCP主站请求报文发送函数
     void TCPRequestMessageSend();
 
@@ -147,18 +143,17 @@ public:
 
     //程序关闭事件处理函数
     void closeEvent(QCloseEvent *event);
+
 private:
     Ui::Widget *ui;
 
+    //日志显示界面
     HistoryMessageDialog * HistoryMessageWindow;
+    //数据输入界面
     inputDialog *input;
 
     int timer;
     void timerEvent(QTimerEvent *event);
-    //结束计时函数
-    void endTimer();
-
-    //network
     //声明tcp套接字
     QTcpSocket *tcpSocket;
     //声明IP地址，端口号

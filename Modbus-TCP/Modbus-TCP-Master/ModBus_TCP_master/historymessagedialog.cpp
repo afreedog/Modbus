@@ -12,7 +12,6 @@ HistoryMessageDialog::HistoryMessageDialog(QWidget *parent) :
 void HistoryMessageDialog::ShowHistoricalMessage(QString path)
 {
     filePath = path;
-
     //打开文件，使用只读方式读取文件
     QFile file(filePath);
     file.open(QFileDevice::ReadOnly);

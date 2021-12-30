@@ -103,10 +103,8 @@ void Widget::ServerInit()
     //设置默认地址的背景显示
     ui->ipEdit->setPlaceholderText(defaultIpAddress);
     ui->portEdit->setPlaceholderText(QString::number(defaultPortAddress));
-
     //设置IP默认值
     IpDefault();
-
     //设置port默认值
     PortDefault();
 }
@@ -119,12 +117,10 @@ void Widget::RequestInit()
     {
         ui->slaveAddressBox->addItem(QString::number(i + 1));
     }
-
     //功能码选项添加
     QStringList strList;
-    strList << "读多个线圈0x01" << "读多个寄存器0x03" << "写多个线圈0x0F" << "写多个寄存器0x10";
+    strList << "0x01" << "0x03" << "0x0f" << "0x10";
     ui->funcCodeBox->addItems(strList);
-
     //设置默认地址的背景提示
     ui->beginAddressLineEdit->setPlaceholderText("0 - 0xFFFF");
     //限制线圈和寄存器的地址范围为0-0xFFFF
@@ -138,18 +134,17 @@ void Widget::RequestInit()
 void Widget::IpDefault()
 {
     //当为空时，设置默认值
-    if(ui->ipEdit->text() == NULL)
+    if(ui->ipEdit->text().isEmpty())
     {
         ipAddress = defaultIpAddress;
         ui->ipEdit->setText(ipAddress);
     }
 }
-
 //4. 设置port默认值函数
 void Widget::PortDefault()
 {
     //当为0时，设置默认值
-    if(ui->portEdit->text() == 0)
+    if(ui->portEdit->text().isEmpty())
     {
         portAddress = defaultPortAddress;
         ui->portEdit->setText(QString::number(portAddress));
@@ -323,7 +318,6 @@ void Widget::TcpDisConnect()
     TCPSendIdentifier = false;
     //清空请求报文数组
     requestMessage.clear();
-
     return;
 }
 
@@ -407,7 +401,6 @@ void Widget::WriteHistoricalMessage()
     ui->messageEdit->clear();
     //消息框内显示清除的时间，和文件夹路径
     FileInformation();
-
     file.close();
 }
 
@@ -461,7 +454,6 @@ void Widget::TCPRequestMessage(int funcCodeIndex)
         {
             //设置TCP请求报文发送状态为离线
             TCPSendIdentifier = false;
-
             return;
         }
     }
