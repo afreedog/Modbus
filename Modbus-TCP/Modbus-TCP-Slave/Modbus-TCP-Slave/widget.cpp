@@ -356,7 +356,6 @@ void Widget::ShowResponseMessage(QByteArray MessageArray)
     //ui->messageBox->append("请求报文地址："+MasterIpAddress + ":"+QString::number(MasterPortNumber));
     ui->messageBox->append("响应报文内容："+res);
 }
-
 //解析请求报文
 bool Widget::TcpRequestMessageAnalysis(QByteArray MessageArray)
 {
@@ -691,18 +690,73 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
     switch(MessageArray.at(7))
     {
     case 15:
-        //0x0f 写多个线圈
+        //0x0f
+        //显示写入的线圈值
+        ui->messageBox->append("----------------------写入线圈----------------------");
+        ui->messageBox->append("线圈起始地址："+QString::number(BeginAddress)+"    "+"写入数量："+QString::number(ReceiveDataNumber));
+        ShowCoilsData(ReceiveData,ReceiveDataNumber);
+        ui->messageBox->append("-----------------------—----------------------------");
+        //线圈写入
         res = HexByteArrayToBinString(ReceiveData);
         UpdateCoilsData(ReceiveDataAddress,ReceiveDataNumber,res);
         break;
     case 16:
         //0x10 写多个寄存器
+        //显示写入的寄存器值
+        ui->messageBox->append("----------------------写入寄存器----------------------");
+        ui->messageBox->append("寄存器起始地址："+QString::number(BeginAddress)+"    "+"写入数量："+QString::number(ReceiveDataNumber));
+        ShowRegisterData(ReceiveData);
+        ui->messageBox->append("-----------------------------------------------------------");
+
+        //寄存器写入
         res = HexByteArrayToDecString(ReceiveData);
         UpdateRegistersData(ReceiveDataAddress,ReceiveDataNumber,res);
         break;
     }
     NormalResponseMessageSend(ResponseMessage);
     return true;
+}
+
+void Widget::ShowCoilsData(QByteArray CoilsDataArray,quint16 ReceiveDataNumber)
+{
+    //取出需要写入的线圈值，并显示
+    QString dataObtained;
+    for(int i = 0; i < CoilsDataArray.size(); i++)
+    {
+        //先转化为2进制字符串
+        QString str = QString::number((quint8)CoilsDataArray.at(i),2);
+        //再转化为2进制整形，由二进制整形转化为8位2进制字符串前面自动补0，从而保证8位
+        str = QString("%1").arg((quint8)str.toInt(NULL,2),8,2,QChar('0'));
+        //8bit字节倒转
+        byteReverse(str);
+        //添加到数据中
+        dataObtained += str;
+    }
+    //去除填充的0位，读出请求报文请求的线圈数
+    dataObtained = dataObtained.left(ReceiveDataNumber);
+
+    //每个线圈用空格隔开
+    QString res;
+    for(int i=0;i<dataObtained.size();i++)
+    {
+        res += dataObtained[i];
+        res += " ";
+    }
+
+    ui->messageBox->append("线圈写入："+res);
+}
+
+void Widget::ShowRegisterData(QByteArray RegistersDataArray)
+{
+
+    //显示需要写入寄存器的值
+    QString dataObtained;
+    for(int i = 0; i < RegistersDataArray.size(); i += 2)
+    {
+        dataObtained += QString::number(BondTwoUint8ToUint16((quint8)RegistersDataArray.at(i),(quint8)RegistersDataArray.at(i+1)));
+        dataObtained += " ";
+    }
+    ui->messageBox->append("寄存器写入："+dataObtained);
 }
 //0x01功能码 获取线圈数据
 QByteArray Widget::GetData0X01(quint16 BeginAddress,quint16 Number)

@@ -1,35 +1,6 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include "historymessagedialog.h"
-
-#define INIFILE_PATH "../ModBus-TCP-Slave/Data.ini"  //数据文件路径
-#define RECORD_PATH  "../ModBus-TCP-Slave/record.txt"
-#define MAXSLAVENUMBER 247  //从机地址最大数
-#define CLOCK_REFRESH 500   //时钟刷新时间
-#define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss" //时间显示格式
-#define WAITE_FOR_CONNECT 3000  //等待连接
-#define RESENDNUMBER 3  //超时重发次数
-
-#define ADDRESS_MIN 0  //线圈和寄存器的地址最小值
-#define ADDRESS_MAX 65535 //线圈和寄存器的地址最大值
-
-#define READ_COIL_MINNUM  1 //请求报文读取线圈最小值
-#define READ_COIL_MAXNUM 2000  //请求报文读取线圈最大值
-#define READ_REGISTER_MINNUM 1  //请求报文读取寄存器个数的最小值
-#define READ_REGISTER_MAXNUM 125  //请求报文读取寄存器个数的最大值
-
-#define WRITE_COIL_MINNUM 1  //请求报文写入线圈个数的最小值
-#define WRITE_COIL_MAXNUM 1968 //请求报人写入线圈个数的最大值
-#define WRITE_REGISTER_MINNUM 1  //请求报文写入寄存器个数最小值
-#define WRITE_REGISTER_MAXNUM 123 //请求报文写入寄存器个数最大值
-#define WRITE_REGISTER_VALUE_MINNUM 0 //请求报文写入寄存器中的数值最小值
-#define WRITE_REGISTER_VALUE_MAXNUM 65535  //请求报文写入寄存器的数值最大值
-#define REQUEST_MESSAGE_LENGTH_0X01_0X03  12   //0X01或0X03请求报文长度
-#define TCP_MBAP_HEADER_LENGTH 6     //TCP 中MBAP的字节长度
-#define TCP_MAX_LENGTH  259
-#define TCP_MIN_LENGTH  12
-
 #include <QWidget>
 //Basic
 #include <QDebug>
@@ -47,11 +18,36 @@
 #include <QInputDialog>
 #include <QIODevice>
 #include <QDebug>
-
 //Network
 #include<QtNetwork>
 #include<QTcpServer>
 #include<QHostAddress>
+
+#include "historymessagedialog.h"
+
+#define INIFILE_PATH "../ModBus-TCP-Slave/Data.ini"  //数据文件路径
+#define RECORD_PATH  "../ModBus-TCP-Slave/record.txt"
+#define MAXSLAVENUMBER 247  //从机地址最大数
+#define CLOCK_REFRESH 500   //时钟刷新时间
+#define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss" //时间显示格式
+#define WAITE_FOR_CONNECT 3000  //等待连接
+#define RESENDNUMBER 3  //超时重发次数
+#define ADDRESS_MIN 0  //线圈和寄存器的地址最小值
+#define ADDRESS_MAX 65535 //线圈和寄存器的地址最大值
+#define READ_COIL_MINNUM  1 //请求报文读取线圈最小值
+#define READ_COIL_MAXNUM 2000  //请求报文读取线圈最大值
+#define READ_REGISTER_MINNUM 1  //请求报文读取寄存器个数的最小值
+#define READ_REGISTER_MAXNUM 125  //请求报文读取寄存器个数的最大值
+#define WRITE_COIL_MINNUM 1  //请求报文写入线圈个数的最小值
+#define WRITE_COIL_MAXNUM 1968 //请求报人写入线圈个数的最大值
+#define WRITE_REGISTER_MINNUM 1  //请求报文写入寄存器个数最小值
+#define WRITE_REGISTER_MAXNUM 123 //请求报文写入寄存器个数最大值
+#define WRITE_REGISTER_VALUE_MINNUM 0 //请求报文写入寄存器中的数值最小值
+#define WRITE_REGISTER_VALUE_MAXNUM 65535  //请求报文写入寄存器的数值最大值
+#define REQUEST_MESSAGE_LENGTH_0X01_0X03  12   //0X01或0X03请求报文长度
+#define TCP_MBAP_HEADER_LENGTH 6     //TCP 中MBAP的字节长度
+#define TCP_MAX_LENGTH  259
+#define TCP_MIN_LENGTH  12
 
 namespace Ui {
 class Widget;
@@ -136,6 +132,9 @@ public:
     bool AnalysisMessage0X010X03(QByteArray MessageArray);
     //0x0f
     bool AnalysisMessage0X0f0X10(QByteArray MessageArray);
+    void ShowCoilsData(QByteArray CoilsDataArray,quint16 ReceiveDataNumber);
+    void ShowRegisterData(QByteArray RegistersDataArray);
+
     //0x01 获取线圈数据
     QByteArray GetData0X01(quint16 BeginAddress,quint16 Number);
     //0x03 获取寄存器数据
