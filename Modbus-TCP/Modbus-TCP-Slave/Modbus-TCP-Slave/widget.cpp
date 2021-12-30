@@ -13,6 +13,8 @@ Widget::Widget(QWidget *parent) :
     TcpServerInit();
     //监听指定端口
     connect(ui->connectButton,&QPushButton::clicked,this,&Widget::ListenTcpServer);
+
+
     //显示新建连接
     connect(tcpServer,&QTcpServer::newConnection,[&](){
         //连接提示
@@ -31,13 +33,6 @@ Widget::Widget(QWidget *parent) :
 
     });
 
-    //搜索框定位
-    connect(ui->coilSearchPushBotton,&QPushButton::clicked,[=](){
-        Search(1);
-    });
-    connect(ui->registerSearchPushBotton,&QPushButton::clicked,[=](){
-        Search(2);
-    });
     //手动关闭连接
     connect(ui->disconnectButton,&QPushButton::clicked,[=](){
          if(TcpServerConnectState == true)
@@ -49,6 +44,18 @@ Widget::Widget(QWidget *parent) :
          }
 
     });
+
+    //搜索框定位
+    //线圈搜索框定位
+    connect(ui->coilSearchPushBotton,&QPushButton::clicked,[=](){
+        Search(1);
+    });
+    //寄存器搜索框定位
+    connect(ui->registerSearchPushBotton,&QPushButton::clicked,[=](){
+        Search(2);
+    });
+
+    //历史信息
     //历史信息显示
     connect(ui->ShowHistoryMessageButton,&QPushButton::clicked,[=](){
         HistoryMessageWindow->ShowHistoryMessage(RECORD_PATH);
