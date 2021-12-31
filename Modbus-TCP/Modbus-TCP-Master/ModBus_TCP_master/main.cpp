@@ -1,5 +1,4 @@
 #include "widget.h"
-#include "historymessagedialog.h"
 #include <QApplication>
 #include <QSplashScreen>
 #include <QThread>

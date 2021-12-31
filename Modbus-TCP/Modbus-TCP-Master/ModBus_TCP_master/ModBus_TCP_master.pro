@@ -15,15 +15,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
         widget.cpp \
     historymessagedialog.cpp \
-    inputdialog.cpp
+    inputdialog.cpp \
+    showresponsedataorrequestdata.cpp
 
 HEADERS  += widget.h \
     historymessagedialog.h \
-    inputdialog.h
+    inputdialog.h \
+    showresponsedataorrequestdata.h
 
 FORMS    += widget.ui \
     historymessagedialog.ui \
-    inputdialog.ui
+    inputdialog.ui \
+    showresponsedataorrequestdata.ui
 
 CONFIG += c++11
 

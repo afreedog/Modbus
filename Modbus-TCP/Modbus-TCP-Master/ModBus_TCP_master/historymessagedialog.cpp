@@ -7,7 +7,6 @@ HistoryMessageDialog::HistoryMessageDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 }
-
 //声明设置路径函数
 void HistoryMessageDialog::ShowHistoricalMessage(QString path)
 {
@@ -19,16 +18,12 @@ void HistoryMessageDialog::ShowHistoricalMessage(QString path)
     //读取文件
     QByteArray array;
     array = file.readAll();
-
     ui->historyMessageBrowser->setText(array);
     ui->historyMessageBrowser->moveCursor(QTextCursor::End);
-
     //显示模态对话框
     exec();
     file.close();
 }
-
-
 
 HistoryMessageDialog::~HistoryMessageDialog()
 {
