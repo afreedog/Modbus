@@ -21,7 +21,6 @@
 #include <QHostAddress>
 #include "historymessagedialog.h"
 #include "inputdialog.h"
-#include "showresponsedataorrequestdata.h"
 
 //Macro
 #define RECORD_FILE_PATH  "../ModBus_TCP_master/record.txt"
@@ -153,7 +152,6 @@ private:
     //日志显示界面
     HistoryMessageDialog * HistoryMessageWindow;
     //数据显示
-    ShowResponseDataOrRequestData * ShowResponseDataOrRequestDataWindow;
 
     //数据输入界面
     inputDialog *input;

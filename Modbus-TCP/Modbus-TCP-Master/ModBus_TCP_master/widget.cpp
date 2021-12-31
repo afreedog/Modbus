@@ -59,11 +59,7 @@ Widget::Widget(QWidget *parent) :
 
     //历史信息路径重置槽函数
     connect(ui->ResetFilePahtButton,&QPushButton::clicked,[=](){
-        //ResetFilePath();
-        ShowResponseDataOrRequestDataWindow = new ShowResponseDataOrRequestData;
-        ShowResponseDataOrRequestDataWindow->show();
-        ShowResponseDataOrRequestDataWindow->setAttribute(Qt::WA_DeleteOnClose);
-
+        ResetFilePath();
     });
     //点击查看历史消息，启动查看历史消息函数
     connect(ui->historyButton,&QPushButton::clicked,[=](){
@@ -895,7 +891,7 @@ bool Widget::TCPAnalysisMessage(QByteArray MessageArray)
     }
     }
 
-    if(analysisResult = true)
+    if(analysisResult == true)
     {
         //清空请求报文数组
         requestMessage.clear();
