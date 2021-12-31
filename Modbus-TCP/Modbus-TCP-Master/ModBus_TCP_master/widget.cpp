@@ -57,6 +57,14 @@ Widget::Widget(QWidget *parent) :
          ui->messageEdit->moveCursor(QTextCursor::End);
     });
 
+    //历史信息路径重置槽函数
+    connect(ui->ResetFilePahtButton,&QPushButton::clicked,[=](){
+        //ResetFilePath();
+        ShowResponseDataOrRequestDataWindow = new ShowResponseDataOrRequestData;
+        ShowResponseDataOrRequestDataWindow->show();
+        ShowResponseDataOrRequestDataWindow->setAttribute(Qt::WA_DeleteOnClose);
+
+    });
     //点击查看历史消息，启动查看历史消息函数
     connect(ui->historyButton,&QPushButton::clicked,[=](){
         ViewHistoricalMessage();
@@ -89,7 +97,6 @@ void Widget::TimeInformation()
 void Widget::timerEvent(QTimerEvent *event)
 {
     int tmp = event->timerId();
-
     if(tmp == timer)
     {
         showDateTime();
@@ -133,7 +140,7 @@ void Widget::RequestInit()
 //3. 设置ip默认值函数
 void Widget::IpDefault()
 {
-    //当为空时，设置默认值
+    //IP未设置，设置默认值
     if(ui->ipEdit->text().isEmpty())
     {
         ipAddress = defaultIpAddress;
@@ -143,7 +150,7 @@ void Widget::IpDefault()
 //4. 设置port默认值函数
 void Widget::PortDefault()
 {
-    //当为0时，设置默认值
+    //端口未设置，设置默认值
     if(ui->portEdit->text().isEmpty())
     {
         portAddress = defaultPortAddress;
@@ -151,7 +158,7 @@ void Widget::PortDefault()
     }
 }
 
-//5. 功能码配置函数，选择不同的功能码设置对应的数量范围
+//5. 功能码配置函数，设置不同的功能码设置对应的数量范围并限制其取值
 void Widget::FuncCodeSetNumLineEdit(int FCBIndex)
 {
     if(FCBIndex == 0) //读输出线圈 0x01 看响应报文：数据最多250byte = 2000bit
@@ -184,7 +191,8 @@ void Widget::ConnectSuccessPrompt()
     //时间
     TimeInformation();
     //消息窗口显示信息
-    ui->messageEdit->append("成功连接至服务器! IP地址：" + ipAddress + " 端口号：" + QString::number(portAddress));
+    ui->messageEdit->append("成功连接至服务器!");
+    ui->messageEdit->append("IP地址："+ ipAddress + "    端口号：" + QString::number(portAddress));
 }
 //2. 提示连接失败函数
 void Widget::ConnectFailurePrompt()
@@ -195,6 +203,7 @@ void Widget::ConnectFailurePrompt()
     //消息窗口显示信息
     ui->messageEdit->append("连接服务器超时，请重新操作！");
 }
+
 //3. 提示连接断开函数
 void Widget::ConnectBrokensPrompt()
 {
@@ -254,8 +263,8 @@ void Widget::TcpConnect()
     //判断当前是等待连接状态还是已连接状态
     if(ui->connectButton->text() == "连接")
     {
-        //以防万一，取消当前所有连接，重置套接字
-        tcpSocket->abort();//取消原有连接
+        //若存在连接，则取消原有连接，重置套接字
+        tcpSocket->abort();
 
         //设置IP默认值
         IpDefault();
@@ -336,7 +345,6 @@ void Widget::ClearMessageWin()
         TimeInformation();
         //显示清除窗口
         ui->messageEdit->append("清除消息窗口！");
-
         //将现有历史记录写入文件
         WriteHistoricalMessage();
     }
@@ -345,24 +353,26 @@ void Widget::ClearMessageWin()
 //2. 查看历史消息函数
 void Widget::ViewHistoricalMessage()
 {
+    //当前路径为空
+    //设置自定义路径
+    if(path == NULL)
+    {
+         path = QFileDialog::getOpenFileName(this,"打开文件","../ModBus_TCP_master","TEXT(*.txt)");
+         ui->messageEdit->append("自定义路径设置成功！");
+         FileInformation();
+    }
+
+    //自定义路径为空
     if(path == NULL)
     {
         //提示没有文件路径
         NoFilePathPrompt();
-        //让其选择文本文件路径
-        path =  QFileDialog::getOpenFileName(this,"打开文件","./","TEXT(*.txt)");
-        //如果为空，提示打开失败
-        if(path == NULL)
-        {
-            FailedOpenFilePrompt();
-            path = "";
-            return;
-        }
-        else
-        {
-            //提示文件路径设置成功
-            PathSettingSuccessPrompt();
-        }
+        //提示文件打开失败
+        FailedOpenFilePrompt();
+        //设置默认路径
+        path = RECORD_FILE_PATH;
+        ui->messageEdit->append("使用默认路径！");
+        FileInformation();
     }
 
     //打开显示窗口显示历史记录内容，传入路径参数
@@ -372,23 +382,10 @@ void Widget::ViewHistoricalMessage()
 //3. 写历史消息函数
 void Widget::WriteHistoricalMessage()
 {
-    //如果没有路径，先选择路径，有路径则写入
+    //路径为空时，设置为默认路径
     if(path == NULL)
     {
-        //让其选择文本文件路径
-        path =  QFileDialog::getOpenFileName(this,"打开文件","./","TEXT(*.txt)");
-        //如果为空，提示打开失败，则无法清除消息框中的内容
-        if(path == NULL)
-        {
-            FailedOpenFilePrompt();
-            path = "";
-            return;
-        }
-        else
-        {
-            //提示文件路径设置成功
-            PathSettingSuccessPrompt();
-        }
+        path = RECORD_FILE_PATH;
     }
     //将历史记录写入文件，使用追加方式写入文件
     QFile file(path);
@@ -396,11 +393,9 @@ void Widget::WriteHistoricalMessage()
     file.write(ui->messageEdit->toPlainText().toUtf8().data());
     //消息分块
     file.write("\n\n");
-
     //清除消息框中的内容
     ui->messageEdit->clear();
     //消息框内显示清除的时间，和文件夹路径
-    FileInformation();
     file.close();
 }
 
@@ -659,7 +654,7 @@ QByteArray Widget::userRegistersInputProcess()
         input->hide();
         //发送按钮暂时关闭
         ui->sendButton->setEnabled(false);
-        while(writeRegister.isEmpty() )//|| (!isLegal))
+        while(writeRegister.isEmpty() || (!isLegal))
         {
             //输入标题
             QString inputDialogTitle = "写十进制寄存器(0-65535)";
@@ -667,15 +662,13 @@ QByteArray Widget::userRegistersInputProcess()
             QString writeGuide = "请输入你想写入的第" + QString::number(i + 1) + "个寄存器：";
             //获取字符串
             input->show();
-
             writeRegister = input->getText(inputDialogTitle,writeGuide);
-
             //判断字符串合法性，转换为10进制判断
-//            Register = writeRegister.toInt(NULL,10);
-//            if((Register >= WRITE_REGISTER_VALUE_MINNUM) && (Register <= WRITE_REGISTER_VALUE_MAXNUM))
-//            {
-//                isLegal = true;
-//            }
+            Register = writeRegister.toInt(NULL,10);
+            if((Register >= WRITE_REGISTER_VALUE_MINNUM) && (Register <= WRITE_REGISTER_VALUE_MAXNUM))
+            {
+                isLegal = true;
+            }
         }
 
         delete input;
@@ -1385,6 +1378,18 @@ quint16 Widget::BondTwoUint8ToUint16(quint8 preNum, quint8 afterNum)
     return bondNum;
 }
 
+void Widget::ResetFilePath()
+{
+    //重置文件报文路径
+    QString filePath = QFileDialog::getOpenFileName(this,"打开文件","../ModBus_TCP_master","TEXT(*.txt)");
+    if(filePath != NULL)
+    {
+        path = filePath;
+        FileInformation();
+    }
+
+}
+
 //12. 数组转十六进制字符串
 //   参数1：目标十六进制数组
 //   参数2：需要转化的长度
@@ -1430,7 +1435,7 @@ void Widget::closeEvent(QCloseEvent *event) //系统自带退出确定程序
     //选择不退出，则程序继续运行，选择退出，则进行保存数据流程
     if (choose== QMessageBox::No)
      {
-          event->ignore();  //忽略//程序继续运行
+          event->ignore();
     }
     else if (choose== QMessageBox::Yes)
     {
@@ -1439,13 +1444,11 @@ void Widget::closeEvent(QCloseEvent *event) //系统自带退出确定程序
         TimeInformation();
         //消息窗口显示信息
         ui->messageEdit->append("关闭应用程序！");
-
         //将现有历史记录写入文件
         WriteHistoricalMessage();
-
+        FileInformation();
         //断开连接
         TcpDisConnect();
-
         //退出程序
         event->accept();
     }

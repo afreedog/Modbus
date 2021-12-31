@@ -21,6 +21,7 @@
 #include <QHostAddress>
 #include "historymessagedialog.h"
 #include "inputdialog.h"
+#include "showresponsedataorrequestdata.h"
 
 //Macro
 #define RECORD_FILE_PATH  "../ModBus_TCP_master/record.txt"
@@ -141,6 +142,8 @@ public:
     //连接两个quint8数据为一个quint16数据
     quint16 BondTwoUint8ToUint16(quint8 preNum, quint8 afterNum);
 
+    //重置文件保存路径
+    void ResetFilePath();
     //程序关闭事件处理函数
     void closeEvent(QCloseEvent *event);
 
@@ -149,6 +152,9 @@ private:
 
     //日志显示界面
     HistoryMessageDialog * HistoryMessageWindow;
+    //数据显示
+    ShowResponseDataOrRequestData * ShowResponseDataOrRequestDataWindow;
+
     //数据输入界面
     inputDialog *input;
 

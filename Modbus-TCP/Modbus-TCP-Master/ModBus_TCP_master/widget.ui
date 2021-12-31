@@ -40,7 +40,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,15,3">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0,1,0,1">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0,1,0,0,1">
        <item>
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
@@ -97,6 +97,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="ResetFilePahtButton">
+         <property name="text">
+          <string>路径重置</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -140,8 +147,8 @@
        </property>
        <property name="font">
         <font>
-         <weight>75</weight>
-         <bold>true</bold>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="layoutDirection">
