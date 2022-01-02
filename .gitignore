@@ -5,4 +5,4 @@ Modbus-TCP/Modbus-TCP-Slave/build-Modbus-TCP-Slave-Desktop_Qt_5_6_3_MinGW_32bit-
 
 #忽略RTU Debug目录
 Modbus-RTU/Modbus-RTU-Master/build-Modbus-RTU-Master-Desktop_Qt_5_6_3_MinGW_32bit-Debug/
-Modbus-RTU/Modbus-RTU-Slave/build-ModBus_RTU_slaver-Desktop_Qt_5_4_0_MinGW_32bit-Debug/
+Modbus-RTU/Modbus-RTU-Slave/build-ModBus_RTU_slaver-Desktop_Qt_5_6_3_MinGW_32bit-Debug/
