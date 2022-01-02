@@ -32,33 +32,38 @@ QT_BEGIN_NAMESPACE
 class Ui_Widget
 {
 public:
-    QVBoxLayout *verticalLayout_6;
+    QVBoxLayout *verticalLayout_5;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_15;
     QLabel *showCurrentTime;
     QSpacerItem *horizontalSpacer_16;
+    QPushButton *ShowHistoryMessageButton;
+    QPushButton *ClearHistoryButton;
     QVBoxLayout *verticalLayout_2;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_2;
     QTextEdit *messageBox;
     QHBoxLayout *horizontalLayout_3;
+    QSpacerItem *horizontalSpacer_2;
     QGroupBox *groupBox_2;
     QGridLayout *gridLayout;
     QLabel *ipAddressText;
-    QLineEdit *ipAddressData;
-    QLineEdit *portNumberData;
-    QLabel *portNumberText;
-    QLabel *LocalAddressLabel;
     QLineEdit *SlaveAddressNumber;
-    QGroupBox *groupBox_3;
+    QLabel *portNumberText;
+    QLineEdit *portNumberData;
+    QLineEdit *ipAddressData;
+    QLabel *LocalAddressLabel;
+    QSpacerItem *horizontalSpacer_4;
+    QGroupBox *groupBox_4;
     QVBoxLayout *verticalLayout_4;
     QPushButton *FlushIPAddressButton;
-    QPushButton *connectButton;
     QPushButton *disconnectButton;
-    QGroupBox *groupBox_4;
-    QVBoxLayout *verticalLayout_5;
-    QPushButton *ClearHistoryButton;
-    QPushButton *ShowHistoryMessageButton;
+    QSpacerItem *horizontalSpacer;
+    QGroupBox *groupBox_3;
+    QHBoxLayout *horizontalLayout_2;
+    QPushButton *connectButton;
+    QSpacerItem *horizontalSpacer_3;
+    QSpacerItem *horizontalSpacer_5;
     QTabWidget *tabWidget;
     QWidget *tab;
     QVBoxLayout *verticalLayout;
@@ -97,10 +102,10 @@ public:
         font.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
         font.setPointSize(9);
         Widget->setFont(font);
-        verticalLayout_6 = new QVBoxLayout(Widget);
-        verticalLayout_6->setSpacing(6);
-        verticalLayout_6->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
+        verticalLayout_5 = new QVBoxLayout(Widget);
+        verticalLayout_5->setSpacing(6);
+        verticalLayout_5->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
@@ -111,7 +116,7 @@ public:
         showCurrentTime = new QLabel(Widget);
         showCurrentTime->setObjectName(QStringLiteral("showCurrentTime"));
         QFont font1;
-        font1.setPointSize(12);
+        font1.setPointSize(11);
         showCurrentTime->setFont(font1);
 
         horizontalLayout->addWidget(showCurrentTime);
@@ -120,8 +125,18 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer_16);
 
+        ShowHistoryMessageButton = new QPushButton(Widget);
+        ShowHistoryMessageButton->setObjectName(QStringLiteral("ShowHistoryMessageButton"));
 
-        verticalLayout_6->addLayout(horizontalLayout);
+        horizontalLayout->addWidget(ShowHistoryMessageButton);
+
+        ClearHistoryButton = new QPushButton(Widget);
+        ClearHistoryButton->setObjectName(QStringLiteral("ClearHistoryButton"));
+
+        horizontalLayout->addWidget(ClearHistoryButton);
+
+
+        verticalLayout_5->addLayout(horizontalLayout);
 
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(6);
@@ -150,11 +165,15 @@ public:
         verticalLayout_2->addWidget(groupBox);
 
 
-        verticalLayout_6->addLayout(verticalLayout_2);
+        verticalLayout_5->addLayout(verticalLayout_2);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_2);
+
         groupBox_2 = new QGroupBox(Widget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
         gridLayout = new QGridLayout(groupBox_2);
@@ -168,19 +187,28 @@ public:
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(ipAddressText->sizePolicy().hasHeightForWidth());
         ipAddressText->setSizePolicy(sizePolicy2);
+        ipAddressText->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(ipAddressText, 0, 0, 1, 1);
 
-        ipAddressData = new QLineEdit(groupBox_2);
-        ipAddressData->setObjectName(QStringLiteral("ipAddressData"));
+        SlaveAddressNumber = new QLineEdit(groupBox_2);
+        SlaveAddressNumber->setObjectName(QStringLiteral("SlaveAddressNumber"));
         QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Fixed);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(ipAddressData->sizePolicy().hasHeightForWidth());
-        ipAddressData->setSizePolicy(sizePolicy3);
-        ipAddressData->setAlignment(Qt::AlignCenter);
+        sizePolicy3.setHeightForWidth(SlaveAddressNumber->sizePolicy().hasHeightForWidth());
+        SlaveAddressNumber->setSizePolicy(sizePolicy3);
+        SlaveAddressNumber->setAlignment(Qt::AlignCenter);
 
-        gridLayout->addWidget(ipAddressData, 0, 1, 1, 1);
+        gridLayout->addWidget(SlaveAddressNumber, 1, 3, 1, 1);
+
+        portNumberText = new QLabel(groupBox_2);
+        portNumberText->setObjectName(QStringLiteral("portNumberText"));
+        sizePolicy2.setHeightForWidth(portNumberText->sizePolicy().hasHeightForWidth());
+        portNumberText->setSizePolicy(sizePolicy2);
+        portNumberText->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(portNumberText, 0, 1, 1, 1);
 
         portNumberData = new QLineEdit(groupBox_2);
         portNumberData->setObjectName(QStringLiteral("portNumberData"));
@@ -190,74 +218,83 @@ public:
 
         gridLayout->addWidget(portNumberData, 1, 1, 1, 1);
 
-        portNumberText = new QLabel(groupBox_2);
-        portNumberText->setObjectName(QStringLiteral("portNumberText"));
-        sizePolicy2.setHeightForWidth(portNumberText->sizePolicy().hasHeightForWidth());
-        portNumberText->setSizePolicy(sizePolicy2);
+        ipAddressData = new QLineEdit(groupBox_2);
+        ipAddressData->setObjectName(QStringLiteral("ipAddressData"));
+        sizePolicy3.setHeightForWidth(ipAddressData->sizePolicy().hasHeightForWidth());
+        ipAddressData->setSizePolicy(sizePolicy3);
+        ipAddressData->setAlignment(Qt::AlignCenter);
 
-        gridLayout->addWidget(portNumberText, 1, 0, 1, 1);
+        gridLayout->addWidget(ipAddressData, 1, 0, 1, 1);
 
         LocalAddressLabel = new QLabel(groupBox_2);
         LocalAddressLabel->setObjectName(QStringLiteral("LocalAddressLabel"));
+        LocalAddressLabel->setAlignment(Qt::AlignCenter);
 
-        gridLayout->addWidget(LocalAddressLabel, 2, 0, 1, 1);
-
-        SlaveAddressNumber = new QLineEdit(groupBox_2);
-        SlaveAddressNumber->setObjectName(QStringLiteral("SlaveAddressNumber"));
-        sizePolicy3.setHeightForWidth(SlaveAddressNumber->sizePolicy().hasHeightForWidth());
-        SlaveAddressNumber->setSizePolicy(sizePolicy3);
-        SlaveAddressNumber->setAlignment(Qt::AlignCenter);
-
-        gridLayout->addWidget(SlaveAddressNumber, 2, 1, 1, 1);
+        gridLayout->addWidget(LocalAddressLabel, 0, 3, 1, 1);
 
 
         horizontalLayout_3->addWidget(groupBox_2);
 
-        groupBox_3 = new QGroupBox(Widget);
-        groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
-        verticalLayout_4 = new QVBoxLayout(groupBox_3);
+        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_4);
+
+        groupBox_4 = new QGroupBox(Widget);
+        groupBox_4->setObjectName(QStringLiteral("groupBox_4"));
+        verticalLayout_4 = new QVBoxLayout(groupBox_4);
         verticalLayout_4->setSpacing(6);
         verticalLayout_4->setContentsMargins(11, 11, 11, 11);
         verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
-        FlushIPAddressButton = new QPushButton(groupBox_3);
+        FlushIPAddressButton = new QPushButton(groupBox_4);
         FlushIPAddressButton->setObjectName(QStringLiteral("FlushIPAddressButton"));
+        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(FlushIPAddressButton->sizePolicy().hasHeightForWidth());
+        FlushIPAddressButton->setSizePolicy(sizePolicy4);
 
         verticalLayout_4->addWidget(FlushIPAddressButton);
 
-        connectButton = new QPushButton(groupBox_3);
-        connectButton->setObjectName(QStringLiteral("connectButton"));
-
-        verticalLayout_4->addWidget(connectButton);
-
-        disconnectButton = new QPushButton(groupBox_3);
+        disconnectButton = new QPushButton(groupBox_4);
         disconnectButton->setObjectName(QStringLiteral("disconnectButton"));
+        sizePolicy4.setHeightForWidth(disconnectButton->sizePolicy().hasHeightForWidth());
+        disconnectButton->setSizePolicy(sizePolicy4);
 
         verticalLayout_4->addWidget(disconnectButton);
 
 
-        horizontalLayout_3->addWidget(groupBox_3);
-
-        groupBox_4 = new QGroupBox(Widget);
-        groupBox_4->setObjectName(QStringLiteral("groupBox_4"));
-        verticalLayout_5 = new QVBoxLayout(groupBox_4);
-        verticalLayout_5->setSpacing(6);
-        verticalLayout_5->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
-        ClearHistoryButton = new QPushButton(groupBox_4);
-        ClearHistoryButton->setObjectName(QStringLiteral("ClearHistoryButton"));
-
-        verticalLayout_5->addWidget(ClearHistoryButton);
-
-        ShowHistoryMessageButton = new QPushButton(groupBox_4);
-        ShowHistoryMessageButton->setObjectName(QStringLiteral("ShowHistoryMessageButton"));
-
-        verticalLayout_5->addWidget(ShowHistoryMessageButton);
-
-
         horizontalLayout_3->addWidget(groupBox_4);
 
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        verticalLayout_6->addLayout(horizontalLayout_3);
+        horizontalLayout_3->addItem(horizontalSpacer);
+
+        groupBox_3 = new QGroupBox(Widget);
+        groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
+        horizontalLayout_2 = new QHBoxLayout(groupBox_3);
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        connectButton = new QPushButton(groupBox_3);
+        connectButton->setObjectName(QStringLiteral("connectButton"));
+        sizePolicy4.setHeightForWidth(connectButton->sizePolicy().hasHeightForWidth());
+        connectButton->setSizePolicy(sizePolicy4);
+
+        horizontalLayout_2->addWidget(connectButton);
+
+
+        horizontalLayout_3->addWidget(groupBox_3);
+
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_3);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_3);
+
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        verticalLayout_5->addItem(horizontalSpacer_5);
 
         tabWidget = new QTabWidget(Widget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
@@ -319,8 +356,11 @@ public:
         if (coilsTable->rowCount() < 2)
             coilsTable->setRowCount(2);
         coilsTable->setObjectName(QStringLiteral("coilsTable"));
-        sizePolicy.setHeightForWidth(coilsTable->sizePolicy().hasHeightForWidth());
-        coilsTable->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(coilsTable->sizePolicy().hasHeightForWidth());
+        coilsTable->setSizePolicy(sizePolicy5);
         coilsTable->setMinimumSize(QSize(0, 0));
         coilsTable->setFont(font2);
         coilsTable->setFrameShape(QFrame::Panel);
@@ -380,8 +420,8 @@ public:
         if (registersTable->rowCount() < 2)
             registersTable->setRowCount(2);
         registersTable->setObjectName(QStringLiteral("registersTable"));
-        sizePolicy.setHeightForWidth(registersTable->sizePolicy().hasHeightForWidth());
-        registersTable->setSizePolicy(sizePolicy);
+        sizePolicy5.setHeightForWidth(registersTable->sizePolicy().hasHeightForWidth());
+        registersTable->setSizePolicy(sizePolicy5);
         registersTable->setMinimumSize(QSize(600, 0));
         registersTable->setFont(font2);
         registersTable->setFrameShape(QFrame::Box);
@@ -392,12 +432,12 @@ public:
 
         tabWidget->addTab(tab_2, QString());
 
-        verticalLayout_6->addWidget(tabWidget);
+        verticalLayout_5->addWidget(tabWidget);
 
 
         retranslateUi(Widget);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(Widget);
@@ -407,18 +447,18 @@ public:
     {
         Widget->setWindowTitle(QApplication::translate("Widget", "TCP-Slave", Q_NULLPTR));
         showCurrentTime->setText(QApplication::translate("Widget", "TextLabel", Q_NULLPTR));
+        ShowHistoryMessageButton->setText(QApplication::translate("Widget", "\346\227\245\345\277\227\346\237\245\347\234\213", Q_NULLPTR));
+        ClearHistoryButton->setText(QApplication::translate("Widget", "\346\266\210\346\201\257\346\270\205\351\231\244 ", Q_NULLPTR));
         groupBox->setTitle(QApplication::translate("Widget", "\346\266\210\346\201\257", Q_NULLPTR));
         groupBox_2->setTitle(QApplication::translate("Widget", "\350\256\276\347\275\256", Q_NULLPTR));
         ipAddressText->setText(QApplication::translate("Widget", "IP\345\234\260\345\235\200\357\274\232", Q_NULLPTR));
         portNumberText->setText(QApplication::translate("Widget", "\347\253\257\345\217\243\345\217\267\357\274\232", Q_NULLPTR));
         LocalAddressLabel->setText(QApplication::translate("Widget", "\344\273\216\346\234\272\345\234\260\345\235\200\357\274\232", Q_NULLPTR));
-        groupBox_3->setTitle(QApplication::translate("Widget", "\350\277\236\346\216\245", Q_NULLPTR));
+        groupBox_4->setTitle(QString());
         FlushIPAddressButton->setText(QApplication::translate("Widget", "\345\210\267\346\226\260IP", Q_NULLPTR));
-        connectButton->setText(QApplication::translate("Widget", "\345\274\200\345\247\213\347\233\221\345\220\254", Q_NULLPTR));
         disconnectButton->setText(QApplication::translate("Widget", "\346\226\255\345\274\200\350\277\236\346\216\245", Q_NULLPTR));
-        groupBox_4->setTitle(QApplication::translate("Widget", "\346\227\245\345\277\227", Q_NULLPTR));
-        ClearHistoryButton->setText(QApplication::translate("Widget", "\346\266\210\346\201\257\346\270\205\351\231\244 ", Q_NULLPTR));
-        ShowHistoryMessageButton->setText(QApplication::translate("Widget", "\346\227\245\345\277\227\346\237\245\347\234\213", Q_NULLPTR));
+        groupBox_3->setTitle(QApplication::translate("Widget", "\350\277\236\346\216\245", Q_NULLPTR));
+        connectButton->setText(QApplication::translate("Widget", "\345\274\200\345\247\213\347\233\221\345\220\254", Q_NULLPTR));
         label_2->setText(QApplication::translate("Widget", "\347\272\277\345\234\210\346\225\260\346\215\256", Q_NULLPTR));
         coilSearchPushBotton->setText(QApplication::translate("Widget", "\346\220\234\347\264\242", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("Widget", "\347\272\277\345\234\210", Q_NULLPTR));
