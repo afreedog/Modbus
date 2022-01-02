@@ -8,7 +8,8 @@ Widget::Widget(QWidget *parent) :
 
     ui->setupUi(this);
     tcpServer = new QTcpServer(this);
-    this->setFixedSize(700,740);
+    this->resize(QSize(760,770));
+
     //初始化服务器
     TcpServerInit();
     //监听指定端口
