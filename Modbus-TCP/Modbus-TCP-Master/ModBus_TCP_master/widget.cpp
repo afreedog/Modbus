@@ -103,6 +103,9 @@ void Widget::timerEvent(QTimerEvent *event)
 //1. 初始化服务器参数设置
 void Widget::ServerInit()
 {
+    //初始化设置对象
+    settings = new QSettings(DATA_FILE_PATH,QSettings::IniFormat);
+
     //设置默认地址的背景显示
     ui->ipEdit->setPlaceholderText(defaultIpAddress);
     ui->portEdit->setPlaceholderText(QString::number(defaultPortAddress));
@@ -110,6 +113,8 @@ void Widget::ServerInit()
     IpDefault();
     //设置port默认值
     PortDefault();
+    //初始化数据显示
+    DataInitialization();
 }
 
 //2. 初始化请求窗口设置
@@ -1376,7 +1381,7 @@ quint16 Widget::BondTwoUint8ToUint16(quint8 preNum, quint8 afterNum)
 
 void Widget::ResetFilePath()
 {
-    //重置文件报文路径
+    //重置日志文件保存路径
     QString filePath = QFileDialog::getOpenFileName(this,"打开文件","../ModBus_TCP_master","TEXT(*.txt)");
     if(filePath != NULL)
     {
@@ -1420,6 +1425,40 @@ QString Widget::HexByteArrayToHexString(QByteArray HexByteArr,int ConvertLen, in
     //返回转化后的十六进制字符串
     return readMes;
 }
+void Widget::DataInitialization()
+{
+    for(int i = 0; i < (ADDRESS_MAX + 1); i++)
+    {
+        //地址设置
+        QString adr =  "0x" + QString("%1").arg(i,4,16,QLatin1Char('0'));
+        ui->CoilsDataTable->setItem(0,i, new QTableWidgetItem(QString(adr)));
+        ui->CoilsDataTable->item(0,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        ui->RegistersDataTable->setItem(0,i, new QTableWidgetItem(QString(adr)));
+        ui->RegistersDataTable->item(0,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        //读出线圈数据
+        QString coilData = settings->value("Section" + QString::number(i+1) + "/coil").toString();
+        //读出寄存器数据
+        QString registerData = settings->value("Section" + QString::number(i+1) + "/regi").toString();
+        qDebug() << registerData <<endl;
+        //在线圈数据表中显示数据
+        if(coilData == "1")
+        {
+            coilData = "ON";
+        }
+        else
+        {
+            coilData = "OFF";
+        }
+        ui->CoilsDataTable->setItem(1,i,new QTableWidgetItem(coilData));
+        //设置表格内文字水平+垂直对齐
+        ui->CoilsDataTable->item(1,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        //在寄存器数据表中显示数据
+        ui->RegistersDataTable->setItem(1,i,new QTableWidgetItem(registerData));
+        //设置表格内文字水平+垂直对齐
+        ui->RegistersDataTable->item(1,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    }
+}
+
 /**************************************************程序关闭处理函数**************************************************/
 void Widget::closeEvent(QCloseEvent *event) //系统自带退出确定程序
 {
@@ -1455,3 +1494,4 @@ Widget::~Widget()
 {
     delete ui;
 }
+

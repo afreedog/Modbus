@@ -15,6 +15,8 @@
 #include <QTimer>
 #include <QCloseEvent>
 #include <QInputDialog>
+#include <QSettings>
+
 //NetWork
 #include <QtNetwork>
 #include <QTcpSocket>
@@ -71,6 +73,16 @@ public:
     QByteArray requestMessage;
     //MBAP事务元标识符
     quint16 transactionIdentifier = 0;
+
+    //声明设置对象
+    QSettings  *settings;
+    //本地数据显示初始化
+    void DataInitialization();
+
+    //数据搜索定位
+
+    //查询数据写入到文件
+
 
     //多线圈字符串合法性判断函数
     bool coilsLegality(QString &coils);

@@ -513,7 +513,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -562,7 +562,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit">
+          <widget class="QTextEdit" name="CoilSearchNumber">
            <property name="maximumSize">
             <size>
              <width>150</width>
@@ -585,7 +585,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="CoilsSearchButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -613,7 +613,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableWidget" name="tableWidget_2">
+        <widget class="QTableWidget" name="CoilsDataTable">
          <property name="rowCount">
           <number>2</number>
          </property>
@@ -66209,7 +66209,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit_2">
+          <widget class="QTextEdit" name="RegisterSearchNumber">
            <property name="maximumSize">
             <size>
              <width>150</width>
@@ -66232,7 +66232,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="RegisterSearchButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -66260,7 +66260,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableWidget" name="tableWidget">
+        <widget class="QTableWidget" name="RegistersDataTable">
          <property name="rowCount">
           <number>2</number>
          </property>
