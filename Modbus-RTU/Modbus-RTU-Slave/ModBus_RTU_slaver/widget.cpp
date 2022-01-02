@@ -7,12 +7,16 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    this->setFixedSize(750,740);
+    this->resize(QSize(770,850));
+
     //设置消息框为只读类型
     ui->messageEdit->setReadOnly(true);
 
     //时钟刷新计时器打开
     clock = startTimer(CLOCK_REFRESH);
+    RecordTimer = new QTimer(this);
+    RecordTimer->setInterval(600000);
+    RecordTimer->start();
 
     //指针分配内存
     PointerManagement(1);
@@ -53,6 +57,11 @@ Widget::Widget(QWidget *parent) :
         //清除消息窗口函数
         ClearMessageWin();
     });
+
+    //6. 日志自动记录
+    connect(RecordTimer,&QTimer::timeout,[=](){
+        WriteHistoricalMessage();
+    });
 }
 
 /*****************************************************时间****************************************************/
@@ -91,6 +100,7 @@ void Widget::timerEvent(QTimerEvent *event)
 
         bufferArray.clear();
     }
+
 }
 
 /***************************************************初始化*****************************************************/
@@ -542,7 +552,6 @@ void Widget::ClearMessageWin()
         TimeInformation();
         //显示清除窗口
         ui->messageEdit->append("清除消息窗口！");
-
         //将现有历史记录写入文件
         WriteHistoricalMessage();
     }
@@ -551,14 +560,13 @@ void Widget::ClearMessageWin()
 //2. 查看历史消息函数
 void Widget::ViewHistoricalMessage()
 {
+
     if(path != NULL)
     {
         //打开显示窗口显示历史记录内容，传入路径参数
         HistoryMessageWindow->ShowHistoricalMessage(path);
-
         return;
     }
-
     //如果路径为空，提示没有文件路径
     NoFilePathPrompt();
     //让其选择文本文件路径
@@ -567,7 +575,9 @@ void Widget::ViewHistoricalMessage()
     if(path == NULL)
     {
         FailedOpenFilePrompt();
-        path = "";
+        path = RECORD_PATH;
+        ui->messageEdit->append("使用默认路径！");
+        HistoryMessageWindow->ShowHistoricalMessage(path);
     }
     else
     {
@@ -582,25 +592,10 @@ void Widget::ViewHistoricalMessage()
 //3. 写历史消息函数
 void Widget::WriteHistoricalMessage()
 {
-    if(path == NULL)
+    if(path.isEmpty())
     {
-        //如果没有路径，先选择路径
-        //让其选择文本文件路径
-        path =  QFileDialog::getOpenFileName(this,"打开文件","../ModBus_RTU_slaver","TEXT(*.txt)");
-        //如果为空，提示打开失败，则无法清除消息框中的内容
-        if(path == NULL)
-        {
-            FailedOpenFilePrompt();
-            path = "";
-            return;
-        }
-        else
-        {
-            //提示文件路径设置成功
-            PathSettingSuccessPrompt();
-        }
+            path = RECORD_PATH;
     }
-
     //将历史记录写入文件，使用追加方式写入文件
     QFile file(path);
     file.open(QFileDevice::Append);
@@ -610,9 +605,6 @@ void Widget::WriteHistoricalMessage()
 
     //清除消息框中的内容
     ui->messageEdit->clear();
-    //消息框内显示清除的时间，和文件夹路径
-    FileInformation();
-
     file.close();
 
     return;
@@ -650,7 +642,7 @@ bool Widget::RTUAnalysisMessage(QByteArray MessageArray)
     bool analysisResult = false;
     /**************************************分析报文*************************************/
     //1. 先判断接收到的报文长度是否合法，合法最小长度为读取请求报文，为8字节
-    if(MessageArray.size() < MINIMUM_MESSAGE_LENGTH)
+    if(MessageArray.size() < MINIMUM_MESSAGE_LENGTH || MessageArray.size() > RTU_MESSAGE_MAX_BYTE)
     {
         //消息窗口显示信息
         ui->messageEdit->append("报文长度不合法！");
@@ -1562,21 +1554,15 @@ void Widget::closeEvent(QCloseEvent *event) //系统自带退出确定程序
     }
     else if (choose== QMessageBox::Yes)
     {
-        //记录关闭程序事件
-        //时间
-        TimeInformation();
+        //关闭界面，保存日志
         //消息窗口显示信息
-        ui->messageEdit->append("关闭应用程序！");
-
-        //将现有历史记录写入文件
+        FileInformation();
         WriteHistoricalMessage();
-
         //关闭时钟
+        RecordTimer->stop();
         killTimer(clock);
-
         //清空指针内存
         PointerManagement(0);
-
         //退出程序
         event->accept();
     }

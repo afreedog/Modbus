@@ -160,12 +160,11 @@ private:
     HistoryMessageDialog *HistoryMessageWindow;
 
     //时间事件
-    int clock,ReadMessageTime;
+    int clock;
+    int ReadMessageTime;
+    QTimer *RecordTimer = nullptr;
 
     void timerEvent(QTimerEvent *event);
-    //结束计时函数
-    void endTimer();
-
     //声明设置对象
     QSettings *settings;
 
