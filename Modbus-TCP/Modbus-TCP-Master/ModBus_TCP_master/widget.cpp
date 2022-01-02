@@ -1237,6 +1237,13 @@ bool Widget::TCP0X03FuncCodeProcess(QByteArray MessageArr, QByteArray requestMes
         dataObtained += " ";
     }
 
+    //写入查询数据
+    quint16 BeginAddress;
+    BeginAddress = BondTwoUint8ToUint16((quint8)requestMessageArr[8],(quint8)requestMessageArr[9]);
+    quint16 DataNumber;
+    DataNumber = BondTwoUint8ToUint16((quint8)requestMessageArr[10],(quint8)requestMessageArr[11]);
+    UpdateRegistersData(BeginAddress,DataNumber,dataObtained);
+
     //提示响应报文解析成功
     //时间
     TimeInformation();
@@ -1444,6 +1451,8 @@ QString Widget::HexByteArrayToHexString(QByteArray HexByteArr,int ConvertLen, in
     //返回转化后的十六进制字符串
     return readMes;
 }
+
+//显示本地数据
 void Widget::DataInitialization()
 {
     for(int i = 0; i < (ADDRESS_MAX + 1); i++)
@@ -1476,7 +1485,26 @@ void Widget::DataInitialization()
         ui->RegistersDataTable->item(1,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     }
 }
+//写线圈
+void Widget::WriteCoilsData(int Column, QString CoilData)
+{
 
+    //更新ini文件数据
+    settings->setValue("Section" + QString::number(Column + 1) + "/coil",CoilData);
+    //更新线圈数据表中数据
+    if(CoilData == "1")
+    {
+        CoilData = "ON";
+    }
+    else
+    {
+        CoilData = "OFF";
+    }
+    ui->CoilsDataTable->setItem(1,Column,new QTableWidgetItem(CoilData));
+    //设置表格内文字水平+垂直对齐
+    ui->CoilsDataTable->item(1,Column)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+}
+//更新线圈
 void Widget::UpdateCoilsData(quint16 BeginAddress,quint16 DataNumber,QString DataString)
 {
     //锁住写入线圈数据信号，进行阻塞
@@ -1491,6 +1519,39 @@ void Widget::UpdateCoilsData(quint16 BeginAddress,quint16 DataNumber,QString Dat
     ui->CoilsDataTable->blockSignals(false);
 }
 
+//写寄存器
+void Widget::WriteRegistersData(int Column, QString registerData)
+{
+    //更新ini文件数据
+    settings->setValue("Section" + QString::number(Column + 1) + "/regi",registerData);
+    //更新线圈数据表中数据
+    ui->RegistersDataTable->setItem(1,Column,new QTableWidgetItem(registerData));
+    //设置表格内文字水平+垂直对齐
+    ui->RegistersDataTable->item(1,Column)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+}
+//更新寄存器
+void Widget::UpdateRegistersData(quint16 BeginAddress, quint16 DataNumber, QString DataString)
+{
+    //锁住写入寄存器数据信号，进行阻塞
+    ui->RegistersDataTable->blockSignals(true);
+    //写入寄存器
+    QString temp;
+    int j=0;
+    for(int i=0;i<DataNumber;i++)
+    {
+        while(j< DataString.size() && DataString[j] != ' ')
+        {
+            temp +=DataString[j];
+            j++;
+        }
+        WriteRegistersData(BeginAddress+i,temp);
+        temp.clear();
+        j++;
+    }
+    //解锁写入寄存器数据信号
+    ui->RegistersDataTable->blockSignals(false);
+}
+//数据查询
 void Widget::Search(int type)
 {
     //1为线圈数据表搜索，2为寄存器数据表搜索
@@ -1522,27 +1583,7 @@ void Widget::Search(int type)
     }
 }
 
-void Widget::WriteCoilsData(int Column, QString CoilData)
-{
-    //锁住写入线圈数据信号，进行阻塞
-    //ui->coilsTable->blockSignals(true);
-    //更新ini文件数据
-    settings->setValue("Section" + QString::number(Column + 1) + "/coil",CoilData);
-    //更新线圈数据表中数据
-    if(CoilData == "1")
-    {
-        CoilData = "ON";
-    }
-    else
-    {
-        CoilData = "OFF";
-    }
-    ui->CoilsDataTable->setItem(1,Column,new QTableWidgetItem(CoilData));
-    //设置表格内文字水平+垂直对齐
-    ui->CoilsDataTable->item(1,Column)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-    //解锁写入线圈数据信号
-    //ui->coilsTable->blockSignals(false);
-}
+
 
 
 /**************************************************程序关闭处理函数**************************************************/
