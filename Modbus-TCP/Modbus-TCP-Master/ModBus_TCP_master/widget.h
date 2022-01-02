@@ -23,7 +23,8 @@
 #include "inputdialog.h"
 
 //Macro
-#define RECORD_FILE_PATH  "../ModBus_TCP_master/record.txt"
+#define RECORD_FILE_PATH  "../ModBus_TCP_master/record.txt"  //日志记录路径
+#define DATA_FILE_PATH "../MobBus_TCP_master/Data.ini"  //数据文件路径
 #define MAXSLAVENUMBER 247    //从机地址个数最大为247
 #define CLOCK_REFRESH 500  //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss dddd"  //时钟显示格式
