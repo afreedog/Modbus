@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.0.3, 2022-01-02T08:30:17. -->
+<!-- Written by QtCreator 4.0.3, 2022-01-02T09:28:56. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -285,7 +285,7 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">ModBus_TCP_master</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">ModBus_TCP_master2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/19943/Desktop/Modbus/Modbus-TCP/Modbus-TCP-Master/ModBus_TCP_master/ModBus_TCP_master.pro</value>
     <value type="bool" key="QmakeProjectManager.QmakeRunConfiguration.UseLibrarySearchPath">true</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>

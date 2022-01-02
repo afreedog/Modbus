@@ -106,6 +106,7 @@ void Widget::ServerInit()
     //初始化设置对象
     settings = new QSettings(DATA_FILE_PATH,QSettings::IniFormat);
 
+
     //设置默认地址的背景显示
     ui->ipEdit->setPlaceholderText(defaultIpAddress);
     ui->portEdit->setPlaceholderText(QString::number(defaultPortAddress));
@@ -1437,6 +1438,7 @@ void Widget::DataInitialization()
         ui->RegistersDataTable->item(0,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
         //读出线圈数据
         QString coilData = settings->value("Section" + QString::number(i+1) + "/coil").toString();
+        qDebug() << coilData << endl;
         //读出寄存器数据
         QString registerData = settings->value("Section" + QString::number(i+1) + "/regi").toString();
         qDebug() << registerData <<endl;
