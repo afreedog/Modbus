@@ -25,7 +25,7 @@
   <property name="windowTitle">
    <string>TCP-Slave</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_6">
+  <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -45,7 +45,7 @@
       <widget class="QLabel" name="showCurrentTime">
        <property name="font">
         <font>
-         <pointsize>12</pointsize>
+         <pointsize>11</pointsize>
         </font>
        </property>
        <property name="text">
@@ -65,6 +65,20 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="ShowHistoryMessageButton">
+       <property name="text">
+        <string>日志查看</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="ClearHistoryButton">
+       <property name="text">
+        <string>消息清除 </string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -109,6 +123,19 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
         <string>设置</string>
@@ -125,15 +152,34 @@
           <property name="text">
            <string>IP地址：</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="ipAddressData">
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="SlaveAddressNumber">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="portNumberText">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>端口号：</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -154,27 +200,7 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="portNumberText">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>端口号：</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="LocalAddressLabel">
-          <property name="text">
-           <string>从机地址：</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="SlaveAddressNumber">
+         <widget class="QLineEdit" name="ipAddressData">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -186,31 +212,59 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="LocalAddressLabel">
+          <property name="text">
+           <string>从机地址：</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox_3">
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_4">
        <property name="title">
-        <string>连接</string>
+        <string/>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QPushButton" name="FlushIPAddressButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>刷新IP</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="connectButton">
-          <property name="text">
-           <string>开始监听</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="disconnectButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>断开连接</string>
           </property>
@@ -220,29 +274,67 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox_4">
-       <property name="title">
-        <string>日志</string>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>连接</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="ClearHistoryButton">
-          <property name="text">
-           <string>消息清除 </string>
+         <widget class="QPushButton" name="connectButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="ShowHistoryMessageButton">
           <property name="text">
-           <string>日志查看</string>
+           <string>开始监听</string>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
      </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
     </layout>
+   </item>
+   <item>
+    <spacer name="horizontalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
@@ -255,7 +347,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <property name="font">
@@ -343,7 +435,7 @@
        <item>
         <widget class="QTableWidget" name="coilsTable">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -65997,7 +66089,7 @@
        <item>
         <widget class="QTableWidget" name="registersTable">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
