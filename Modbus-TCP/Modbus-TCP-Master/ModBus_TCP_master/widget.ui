@@ -513,7 +513,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -562,12 +562,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QTextEdit" name="CoilSearchNumber">
-           <property name="maximumSize">
-            <size>
-             <width>150</width>
-             <height>35</height>
-            </size>
+          <widget class="QLineEdit" name="CoilSearchNumber">
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -66209,12 +66206,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QTextEdit" name="RegisterSearchNumber">
-           <property name="maximumSize">
-            <size>
-             <width>150</width>
-             <height>35</height>
-            </size>
+          <widget class="QLineEdit" name="RegisterSearchNumber">
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>

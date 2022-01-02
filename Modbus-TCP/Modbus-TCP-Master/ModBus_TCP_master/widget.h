@@ -26,7 +26,8 @@
 
 //Macro
 #define RECORD_FILE_PATH  "../ModBus_TCP_master/record.txt"  //日志记录路径
-#define DATA_FILE_PATH "../MobBus_TCP_master/Data.ini"  //数据文件路径
+#define DATA_FILE_PATH "../ModBus_TCP_master/Data.ini"  //数据文件路径
+
 #define MAXSLAVENUMBER 247    //从机地址个数最大为247
 #define CLOCK_REFRESH 500  //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss dddd"  //时钟显示格式
@@ -78,11 +79,19 @@ public:
     QSettings  *settings;
     //本地数据显示初始化
     void DataInitialization();
-
     //数据搜索定位
+    void Search(int type);
 
+    //写入单个线圈或寄存器
+    void WriteCoilsData(int Column,QString CoilData);
+     void WriteRegistersData(int Column,QString registerData);
     //查询数据写入到文件
-
+    void UpdateCoilsData(quint16 BeginAddress,quint16 DataNumber,QString DataString);
+    void UpdateRegistersData(quint16 BeginAddress,quint16 DataNumber,QString DataString);
+    //16进制字节数组转化为2进制字符串
+    QString HexByteArrayToBinString(QByteArray DataArray);
+    //16进制字节数组 转化为 10进制字符数组，每个寄存器的值用空格分开
+    QString HexByteArrayToDecString(QByteArray DataArray);
 
     //多线圈字符串合法性判断函数
     bool coilsLegality(QString &coils);

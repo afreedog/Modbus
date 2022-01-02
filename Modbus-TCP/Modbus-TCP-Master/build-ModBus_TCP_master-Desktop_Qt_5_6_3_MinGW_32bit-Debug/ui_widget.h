@@ -84,7 +84,7 @@ public:
     QSpacerItem *horizontalSpacer_7;
     QLabel *label;
     QSpacerItem *horizontalSpacer_4;
-    QTextEdit *CoilSearchNumber;
+    QLineEdit *CoilSearchNumber;
     QSpacerItem *horizontalSpacer_6;
     QPushButton *CoilsSearchButton;
     QSpacerItem *horizontalSpacer_5;
@@ -95,7 +95,7 @@ public:
     QSpacerItem *horizontalSpacer_8;
     QLabel *label_2;
     QSpacerItem *horizontalSpacer_9;
-    QTextEdit *RegisterSearchNumber;
+    QLineEdit *RegisterSearchNumber;
     QSpacerItem *horizontalSpacer_10;
     QPushButton *RegisterSearchButton;
     QSpacerItem *horizontalSpacer_11;
@@ -427,9 +427,9 @@ public:
 
         horizontalLayout_5->addItem(horizontalSpacer_4);
 
-        CoilSearchNumber = new QTextEdit(tab);
+        CoilSearchNumber = new QLineEdit(tab);
         CoilSearchNumber->setObjectName(QStringLiteral("CoilSearchNumber"));
-        CoilSearchNumber->setMaximumSize(QSize(150, 35));
+        CoilSearchNumber->setAlignment(Qt::AlignCenter);
 
         horizontalLayout_5->addWidget(CoilSearchNumber);
 
@@ -490,9 +490,9 @@ public:
 
         horizontalLayout_6->addItem(horizontalSpacer_9);
 
-        RegisterSearchNumber = new QTextEdit(tab_2);
+        RegisterSearchNumber = new QLineEdit(tab_2);
         RegisterSearchNumber->setObjectName(QStringLiteral("RegisterSearchNumber"));
-        RegisterSearchNumber->setMaximumSize(QSize(150, 35));
+        RegisterSearchNumber->setAlignment(Qt::AlignCenter);
 
         horizontalLayout_6->addWidget(RegisterSearchNumber);
 
@@ -536,7 +536,7 @@ public:
 
         retranslateUi(Widget);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(Widget);

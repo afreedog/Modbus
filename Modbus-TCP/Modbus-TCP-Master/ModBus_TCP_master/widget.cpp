@@ -71,6 +71,14 @@ Widget::Widget(QWidget *parent) :
         //清除消息窗口函数
         ClearMessageWin();
     });
+
+    //数据查询
+    connect(ui->CoilsSearchButton,&QPushButton::clicked,[=](){
+        Search(1);
+    });
+    connect(ui->RegisterSearchButton,&QPushButton::clicked,[=](){
+        Search(2);
+    });
 }
 
 /*****************************************************时间****************************************************/
@@ -106,7 +114,6 @@ void Widget::ServerInit()
     //初始化设置对象
     settings = new QSettings(DATA_FILE_PATH,QSettings::IniFormat);
 
-
     //设置默认地址的背景显示
     ui->ipEdit->setPlaceholderText(defaultIpAddress);
     ui->portEdit->setPlaceholderText(QString::number(defaultPortAddress));
@@ -116,6 +123,12 @@ void Widget::ServerInit()
     PortDefault();
     //初始化数据显示
     DataInitialization();
+    //设置搜索框默认背景
+    ui->CoilSearchNumber->setPlaceholderText("0-65535");
+    ui->CoilSearchNumber->setValidator(new QIntValidator(0, 65535, this));
+
+    ui->RegisterSearchNumber->setPlaceholderText("0-65535");
+    ui->RegisterSearchNumber->setValidator(new QIntValidator(0, 65535, this));
 }
 
 //2. 初始化请求窗口设置
@@ -623,8 +636,6 @@ QByteArray Widget::userCoilsInputProcess()
     }
 
     QString test = HexByteArrayToHexString(coilsInputArr,coilsInputArr.size(),1);
-    qDebug() << test << endl;
-
     return coilsInputArr;
 }
 
@@ -1150,6 +1161,13 @@ bool Widget::TCP0X01FuncCodeProcess(QByteArray MessageArr, QByteArray requestMes
     //去除填充的0位，读出请求报文请求的线圈数
     dataObtained = dataObtained.left(number);
 
+    quint16 BeginAddress;
+    BeginAddress = BondTwoUint8ToUint16((quint8)requestMessageArr[8],(quint8)requestMessageArr[9]);
+    quint16 DataNumber;
+    DataNumber = BondTwoUint8ToUint16((quint8)requestMessageArr[10],(quint8)requestMessageArr[11]);
+
+    UpdateCoilsData(BeginAddress,DataNumber,dataObtained);
+
     //提示响应报文解析成功
     //时间
     TimeInformation();
@@ -1438,10 +1456,8 @@ void Widget::DataInitialization()
         ui->RegistersDataTable->item(0,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
         //读出线圈数据
         QString coilData = settings->value("Section" + QString::number(i+1) + "/coil").toString();
-        qDebug() << coilData << endl;
         //读出寄存器数据
         QString registerData = settings->value("Section" + QString::number(i+1) + "/regi").toString();
-        qDebug() << registerData <<endl;
         //在线圈数据表中显示数据
         if(coilData == "1")
         {
@@ -1460,6 +1476,74 @@ void Widget::DataInitialization()
         ui->RegistersDataTable->item(1,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     }
 }
+
+void Widget::UpdateCoilsData(quint16 BeginAddress,quint16 DataNumber,QString DataString)
+{
+    //锁住写入线圈数据信号，进行阻塞
+    ui->CoilsDataTable->blockSignals(true);
+    for(int i=0;i<DataNumber;i++)
+    {
+        int Column = BeginAddress + i;
+        QString coilData = DataString.at(i);
+        WriteCoilsData(Column,coilData);
+    }
+    //解锁写入线圈数据信号
+    ui->CoilsDataTable->blockSignals(false);
+}
+
+void Widget::Search(int type)
+{
+    //1为线圈数据表搜索，2为寄存器数据表搜索
+    if(type == 1)
+    {
+        //获取用户输入的搜索地址
+        int coilIndex = ui->CoilSearchNumber->text().toInt(NULL,10);
+
+        //获取搜索位置的指针
+        QTableWidgetItem *coilItem = ui->CoilsDataTable->item(NULL,coilIndex);
+
+        //将数据表的显示设定为指定指针
+        ui->CoilsDataTable->setCurrentItem(coilItem);
+        //滚动到指向位置，并将指定位置显示在表格顶部
+        ui->CoilsDataTable->scrollToItem(coilItem,QAbstractItemView::PositionAtCenter);
+    }
+    else
+    {
+        //获取用户输入的搜索地址
+        int registerIndex = ui->RegisterSearchNumber->text().toInt(NULL,10);
+
+        //获取搜索位置的指针
+        QTableWidgetItem *registerItem = ui->RegistersDataTable->item(NULL,registerIndex);
+
+        //将数据表的显示设定为指定指针
+        ui->RegistersDataTable->setCurrentItem(registerItem);
+        //滚动到指向位置，并将指定位置显示在表格顶部
+        ui->RegistersDataTable->scrollToItem(registerItem,QAbstractItemView::PositionAtCenter);
+    }
+}
+
+void Widget::WriteCoilsData(int Column, QString CoilData)
+{
+    //锁住写入线圈数据信号，进行阻塞
+    //ui->coilsTable->blockSignals(true);
+    //更新ini文件数据
+    settings->setValue("Section" + QString::number(Column + 1) + "/coil",CoilData);
+    //更新线圈数据表中数据
+    if(CoilData == "1")
+    {
+        CoilData = "ON";
+    }
+    else
+    {
+        CoilData = "OFF";
+    }
+    ui->CoilsDataTable->setItem(1,Column,new QTableWidgetItem(CoilData));
+    //设置表格内文字水平+垂直对齐
+    ui->CoilsDataTable->item(1,Column)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    //解锁写入线圈数据信号
+    //ui->coilsTable->blockSignals(false);
+}
+
 
 /**************************************************程序关闭处理函数**************************************************/
 void Widget::closeEvent(QCloseEvent *event) //系统自带退出确定程序
