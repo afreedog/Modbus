@@ -63,6 +63,8 @@ public:
     void InterfaceInit();
     //数据显示初始化
     QSettings *settings;
+    //数据搜索
+    void Search(int type);
 
     void ShowIniData();
     //最大数量的背景设置函数
@@ -148,6 +150,17 @@ public:
     void RTUReadMessage();
     //显示接收报文
     void ShowResponseMessage(QByteArray responseMessage);
+    //将16进制线圈数据转换为2进制字符串
+    QString CoilsByteArrayToQString(QByteArray DataArray,quint16 DataNumber);
+    //将16进制寄存器转化为10进制字符串
+    QString RegistersByteArrayToQString(QByteArray DataArray);
+
+    //写入单个线圈或寄存器
+    void WriteCoilsData(int Column,QString CoilData);
+     void WriteRegistersData(int Column,QString registerData);
+    //更新数据写入到文件
+    void UpdateCoilsData(quint16 BeginAddress,quint16 DataNumber,QString DataString);
+    void UpdateRegistersData(quint16 BeginAddress,quint16 DataNumber,QString DataString);
     //接收报文解析
     void ParseResponseMessage(QByteArray responseMessage);
 

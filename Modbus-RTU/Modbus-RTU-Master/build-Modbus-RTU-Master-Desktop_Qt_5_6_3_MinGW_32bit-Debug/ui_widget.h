@@ -33,46 +33,56 @@ QT_BEGIN_NAMESPACE
 class Ui_Widget
 {
 public:
-    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *verticalLayout_7;
     QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer_5;
     QLabel *ShowCurrentTime;
     QSpacerItem *horizontalSpacer_6;
     QPushButton *HistoryMessageButton;
     QPushButton *ClearHistoryMessageButton;
+    QVBoxLayout *verticalLayout_6;
     QGroupBox *ShowCurrentMessage;
     QVBoxLayout *verticalLayout;
     QTextEdit *messageBox;
+    QHBoxLayout *horizontalLayout_4;
+    QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout;
     QGroupBox *SerialSetting;
     QGridLayout *gridLayout_2;
-    QLabel *SerialPortLabel;
     QLabel *BaudRateNumberLabel;
+    QLabel *SerialPortLabel;
+    QLabel *DataBitsNumberLabel;
+    QPushButton *RefreshSerialPortButton;
     QComboBox *BaudRateNumber;
+    QLabel *StopBitsNameLabel;
+    QComboBox *DataBitsNumber;
+    QComboBox *StopBitsName;
+    QComboBox *SerialPortName;
     QLabel *ParityNameLabel;
     QComboBox *ParityName;
-    QLabel *DataBitsNumberLabel;
-    QComboBox *SerialPortName;
-    QPushButton *RefreshSerialPortButton;
-    QComboBox *StopBitsName;
-    QComboBox *DataBitsNumber;
-    QLabel *StopBitsNameLabel;
-    QSpacerItem *horizontalSpacer;
+    QSpacerItem *verticalSpacer_3;
+    QSpacerItem *verticalSpacer_2;
+    QGroupBox *groupBox;
+    QVBoxLayout *verticalLayout_2;
     QPushButton *SerialSwitchSettingButton;
     QHBoxLayout *horizontalLayout_3;
     QGroupBox *MessageSetting;
     QGridLayout *gridLayout;
-    QLabel *DataNumberLabel;
     QLabel *SlaveAddressLabel;
-    QLineEdit *DataNumber;
+    QLabel *DataNumberLabel;
     QLabel *BeginAddressLabel;
-    QLineEdit *BeginAddressNumber;
-    QLabel *FunctionCodeLabel;
+    QLineEdit *DataNumber;
     QComboBox *FunctionCodeNumber;
+    QLabel *FunctionCodeLabel;
+    QLineEdit *BeginAddressNumber;
     QLineEdit *SlaveAddressNumber;
+    QSpacerItem *verticalSpacer_4;
+    QSpacerItem *verticalSpacer;
     QSpacerItem *horizontalSpacer_2;
+    QGroupBox *groupBox_2;
+    QGridLayout *gridLayout_3;
     QPushButton *SendMessageButton;
-    QSpacerItem *horizontalSpacer_9;
+    QSpacerItem *horizontalSpacer;
     QTabWidget *tabWidget;
     QWidget *tab;
     QVBoxLayout *verticalLayout_4;
@@ -101,7 +111,7 @@ public:
     {
         if (Widget->objectName().isEmpty())
             Widget->setObjectName(QStringLiteral("Widget"));
-        Widget->resize(627, 736);
+        Widget->resize(739, 736);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -111,10 +121,10 @@ public:
         font.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
         font.setPointSize(10);
         Widget->setFont(font);
-        verticalLayout_2 = new QVBoxLayout(Widget);
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalLayout_7 = new QVBoxLayout(Widget);
+        verticalLayout_7->setSpacing(6);
+        verticalLayout_7->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -146,8 +156,11 @@ public:
         horizontalLayout_2->addWidget(ClearHistoryMessageButton);
 
 
-        verticalLayout_2->addLayout(horizontalLayout_2);
+        verticalLayout_7->addLayout(horizontalLayout_2);
 
+        verticalLayout_6 = new QVBoxLayout();
+        verticalLayout_6->setSpacing(6);
+        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
         ShowCurrentMessage = new QGroupBox(Widget);
         ShowCurrentMessage->setObjectName(QStringLiteral("ShowCurrentMessage"));
         verticalLayout = new QVBoxLayout(ShowCurrentMessage);
@@ -166,8 +179,17 @@ public:
         verticalLayout->addWidget(messageBox);
 
 
-        verticalLayout_2->addWidget(ShowCurrentMessage);
+        verticalLayout_6->addWidget(ShowCurrentMessage);
 
+
+        verticalLayout_7->addLayout(verticalLayout_6);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
@@ -179,6 +201,11 @@ public:
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        BaudRateNumberLabel = new QLabel(SerialSetting);
+        BaudRateNumberLabel->setObjectName(QStringLiteral("BaudRateNumberLabel"));
+
+        gridLayout_2->addWidget(BaudRateNumberLabel, 1, 0, 1, 1);
+
         SerialPortLabel = new QLabel(SerialSetting);
         SerialPortLabel->setObjectName(QStringLiteral("SerialPortLabel"));
         sizePolicy.setHeightForWidth(SerialPortLabel->sizePolicy().hasHeightForWidth());
@@ -186,47 +213,27 @@ public:
 
         gridLayout_2->addWidget(SerialPortLabel, 0, 0, 1, 1);
 
-        BaudRateNumberLabel = new QLabel(SerialSetting);
-        BaudRateNumberLabel->setObjectName(QStringLiteral("BaudRateNumberLabel"));
+        DataBitsNumberLabel = new QLabel(SerialSetting);
+        DataBitsNumberLabel->setObjectName(QStringLiteral("DataBitsNumberLabel"));
 
-        gridLayout_2->addWidget(BaudRateNumberLabel, 0, 2, 1, 1);
+        gridLayout_2->addWidget(DataBitsNumberLabel, 2, 0, 1, 1);
+
+        RefreshSerialPortButton = new QPushButton(SerialSetting);
+        RefreshSerialPortButton->setObjectName(QStringLiteral("RefreshSerialPortButton"));
+
+        gridLayout_2->addWidget(RefreshSerialPortButton, 0, 4, 1, 1);
 
         BaudRateNumber = new QComboBox(SerialSetting);
         BaudRateNumber->setObjectName(QStringLiteral("BaudRateNumber"));
         sizePolicy.setHeightForWidth(BaudRateNumber->sizePolicy().hasHeightForWidth());
         BaudRateNumber->setSizePolicy(sizePolicy);
 
-        gridLayout_2->addWidget(BaudRateNumber, 0, 3, 1, 1);
+        gridLayout_2->addWidget(BaudRateNumber, 1, 1, 1, 1);
 
-        ParityNameLabel = new QLabel(SerialSetting);
-        ParityNameLabel->setObjectName(QStringLiteral("ParityNameLabel"));
+        StopBitsNameLabel = new QLabel(SerialSetting);
+        StopBitsNameLabel->setObjectName(QStringLiteral("StopBitsNameLabel"));
 
-        gridLayout_2->addWidget(ParityNameLabel, 1, 0, 1, 1);
-
-        ParityName = new QComboBox(SerialSetting);
-        ParityName->setObjectName(QStringLiteral("ParityName"));
-
-        gridLayout_2->addWidget(ParityName, 1, 1, 1, 1);
-
-        DataBitsNumberLabel = new QLabel(SerialSetting);
-        DataBitsNumberLabel->setObjectName(QStringLiteral("DataBitsNumberLabel"));
-
-        gridLayout_2->addWidget(DataBitsNumberLabel, 1, 2, 1, 1);
-
-        SerialPortName = new QComboBox(SerialSetting);
-        SerialPortName->setObjectName(QStringLiteral("SerialPortName"));
-
-        gridLayout_2->addWidget(SerialPortName, 0, 1, 1, 1);
-
-        RefreshSerialPortButton = new QPushButton(SerialSetting);
-        RefreshSerialPortButton->setObjectName(QStringLiteral("RefreshSerialPortButton"));
-
-        gridLayout_2->addWidget(RefreshSerialPortButton, 0, 5, 1, 1);
-
-        StopBitsName = new QComboBox(SerialSetting);
-        StopBitsName->setObjectName(QStringLiteral("StopBitsName"));
-
-        gridLayout_2->addWidget(StopBitsName, 1, 5, 1, 1);
+        gridLayout_2->addWidget(StopBitsNameLabel, 2, 3, 1, 1);
 
         DataBitsNumber = new QComboBox(SerialSetting);
         DataBitsNumber->setObjectName(QStringLiteral("DataBitsNumber"));
@@ -237,29 +244,57 @@ public:
         DataBitsNumber->setSizePolicy(sizePolicy2);
         DataBitsNumber->setMinimumSize(QSize(0, 0));
 
-        gridLayout_2->addWidget(DataBitsNumber, 1, 3, 1, 1);
+        gridLayout_2->addWidget(DataBitsNumber, 2, 1, 1, 1);
 
-        StopBitsNameLabel = new QLabel(SerialSetting);
-        StopBitsNameLabel->setObjectName(QStringLiteral("StopBitsNameLabel"));
+        StopBitsName = new QComboBox(SerialSetting);
+        StopBitsName->setObjectName(QStringLiteral("StopBitsName"));
 
-        gridLayout_2->addWidget(StopBitsNameLabel, 1, 4, 1, 1);
+        gridLayout_2->addWidget(StopBitsName, 2, 4, 1, 1);
+
+        SerialPortName = new QComboBox(SerialSetting);
+        SerialPortName->setObjectName(QStringLiteral("SerialPortName"));
+
+        gridLayout_2->addWidget(SerialPortName, 0, 1, 1, 1);
+
+        ParityNameLabel = new QLabel(SerialSetting);
+        ParityNameLabel->setObjectName(QStringLiteral("ParityNameLabel"));
+
+        gridLayout_2->addWidget(ParityNameLabel, 1, 3, 1, 1);
+
+        ParityName = new QComboBox(SerialSetting);
+        ParityName->setObjectName(QStringLiteral("ParityName"));
+
+        gridLayout_2->addWidget(ParityName, 1, 4, 1, 1);
+
+        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_2->addItem(verticalSpacer_3, 1, 2, 1, 1);
 
 
         horizontalLayout->addWidget(SerialSetting);
 
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Minimum);
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        horizontalLayout->addItem(horizontalSpacer);
+        horizontalLayout->addItem(verticalSpacer_2);
 
-        SerialSwitchSettingButton = new QPushButton(Widget);
+        groupBox = new QGroupBox(Widget);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        verticalLayout_2 = new QVBoxLayout(groupBox);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        SerialSwitchSettingButton = new QPushButton(groupBox);
         SerialSwitchSettingButton->setObjectName(QStringLiteral("SerialSwitchSettingButton"));
         sizePolicy1.setHeightForWidth(SerialSwitchSettingButton->sizePolicy().hasHeightForWidth());
         SerialSwitchSettingButton->setSizePolicy(sizePolicy1);
 
-        horizontalLayout->addWidget(SerialSwitchSettingButton);
+        verticalLayout_2->addWidget(SerialSwitchSettingButton);
 
 
-        verticalLayout_2->addLayout(horizontalLayout);
+        horizontalLayout->addWidget(groupBox);
+
+
+        verticalLayout_3->addLayout(horizontalLayout);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
@@ -275,13 +310,6 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        DataNumberLabel = new QLabel(MessageSetting);
-        DataNumberLabel->setObjectName(QStringLiteral("DataNumberLabel"));
-        sizePolicy1.setHeightForWidth(DataNumberLabel->sizePolicy().hasHeightForWidth());
-        DataNumberLabel->setSizePolicy(sizePolicy1);
-
-        gridLayout->addWidget(DataNumberLabel, 1, 2, 1, 1);
-
         SlaveAddressLabel = new QLabel(MessageSetting);
         SlaveAddressLabel->setObjectName(QStringLiteral("SlaveAddressLabel"));
         sizePolicy1.setHeightForWidth(SlaveAddressLabel->sizePolicy().hasHeightForWidth());
@@ -289,12 +317,12 @@ public:
 
         gridLayout->addWidget(SlaveAddressLabel, 0, 0, 1, 1);
 
-        DataNumber = new QLineEdit(MessageSetting);
-        DataNumber->setObjectName(QStringLiteral("DataNumber"));
-        sizePolicy3.setHeightForWidth(DataNumber->sizePolicy().hasHeightForWidth());
-        DataNumber->setSizePolicy(sizePolicy3);
+        DataNumberLabel = new QLabel(MessageSetting);
+        DataNumberLabel->setObjectName(QStringLiteral("DataNumberLabel"));
+        sizePolicy1.setHeightForWidth(DataNumberLabel->sizePolicy().hasHeightForWidth());
+        DataNumberLabel->setSizePolicy(sizePolicy1);
 
-        gridLayout->addWidget(DataNumber, 1, 3, 1, 1);
+        gridLayout->addWidget(DataNumberLabel, 1, 3, 1, 1);
 
         BeginAddressLabel = new QLabel(MessageSetting);
         BeginAddressLabel->setObjectName(QStringLiteral("BeginAddressLabel"));
@@ -303,26 +331,33 @@ public:
 
         gridLayout->addWidget(BeginAddressLabel, 1, 0, 1, 1);
 
-        BeginAddressNumber = new QLineEdit(MessageSetting);
-        BeginAddressNumber->setObjectName(QStringLiteral("BeginAddressNumber"));
-        sizePolicy3.setHeightForWidth(BeginAddressNumber->sizePolicy().hasHeightForWidth());
-        BeginAddressNumber->setSizePolicy(sizePolicy3);
+        DataNumber = new QLineEdit(MessageSetting);
+        DataNumber->setObjectName(QStringLiteral("DataNumber"));
+        sizePolicy3.setHeightForWidth(DataNumber->sizePolicy().hasHeightForWidth());
+        DataNumber->setSizePolicy(sizePolicy3);
 
-        gridLayout->addWidget(BeginAddressNumber, 1, 1, 1, 1);
-
-        FunctionCodeLabel = new QLabel(MessageSetting);
-        FunctionCodeLabel->setObjectName(QStringLiteral("FunctionCodeLabel"));
-        sizePolicy1.setHeightForWidth(FunctionCodeLabel->sizePolicy().hasHeightForWidth());
-        FunctionCodeLabel->setSizePolicy(sizePolicy1);
-
-        gridLayout->addWidget(FunctionCodeLabel, 0, 2, 1, 1);
+        gridLayout->addWidget(DataNumber, 1, 4, 1, 1);
 
         FunctionCodeNumber = new QComboBox(MessageSetting);
         FunctionCodeNumber->setObjectName(QStringLiteral("FunctionCodeNumber"));
         sizePolicy3.setHeightForWidth(FunctionCodeNumber->sizePolicy().hasHeightForWidth());
         FunctionCodeNumber->setSizePolicy(sizePolicy3);
 
-        gridLayout->addWidget(FunctionCodeNumber, 0, 3, 1, 1);
+        gridLayout->addWidget(FunctionCodeNumber, 0, 4, 1, 1);
+
+        FunctionCodeLabel = new QLabel(MessageSetting);
+        FunctionCodeLabel->setObjectName(QStringLiteral("FunctionCodeLabel"));
+        sizePolicy1.setHeightForWidth(FunctionCodeLabel->sizePolicy().hasHeightForWidth());
+        FunctionCodeLabel->setSizePolicy(sizePolicy1);
+
+        gridLayout->addWidget(FunctionCodeLabel, 0, 3, 1, 1);
+
+        BeginAddressNumber = new QLineEdit(MessageSetting);
+        BeginAddressNumber->setObjectName(QStringLiteral("BeginAddressNumber"));
+        sizePolicy3.setHeightForWidth(BeginAddressNumber->sizePolicy().hasHeightForWidth());
+        BeginAddressNumber->setSizePolicy(sizePolicy3);
+
+        gridLayout->addWidget(BeginAddressNumber, 1, 1, 1, 1);
 
         SlaveAddressNumber = new QLineEdit(MessageSetting);
         SlaveAddressNumber->setObjectName(QStringLiteral("SlaveAddressNumber"));
@@ -331,26 +366,52 @@ public:
 
         gridLayout->addWidget(SlaveAddressNumber, 0, 1, 1, 1);
 
+        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout->addItem(verticalSpacer_4, 1, 2, 1, 1);
+
 
         horizontalLayout_3->addWidget(MessageSetting);
 
+
+        verticalLayout_3->addLayout(horizontalLayout_3);
+
+
+        horizontalLayout_4->addLayout(verticalLayout_3);
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        horizontalLayout_4->addItem(verticalSpacer);
+
         horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_3->addItem(horizontalSpacer_2);
+        horizontalLayout_4->addItem(horizontalSpacer_2);
 
-        SendMessageButton = new QPushButton(Widget);
+        groupBox_2 = new QGroupBox(Widget);
+        groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
+        gridLayout_3 = new QGridLayout(groupBox_2);
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setContentsMargins(11, 11, 11, 11);
+        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
+        SendMessageButton = new QPushButton(groupBox_2);
         SendMessageButton->setObjectName(QStringLiteral("SendMessageButton"));
-        sizePolicy1.setHeightForWidth(SendMessageButton->sizePolicy().hasHeightForWidth());
-        SendMessageButton->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(SendMessageButton->sizePolicy().hasHeightForWidth());
+        SendMessageButton->setSizePolicy(sizePolicy4);
 
-        horizontalLayout_3->addWidget(SendMessageButton);
-
-        horizontalSpacer_9 = new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Minimum);
-
-        horizontalLayout_3->addItem(horizontalSpacer_9);
+        gridLayout_3->addWidget(SendMessageButton, 0, 0, 1, 1);
 
 
-        verticalLayout_2->addLayout(horizontalLayout_3);
+        horizontalLayout_4->addWidget(groupBox_2);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_4);
 
         tabWidget = new QTabWidget(Widget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
@@ -380,6 +441,7 @@ public:
 
         CoilSearchNumber = new QLineEdit(tab);
         CoilSearchNumber->setObjectName(QStringLiteral("CoilSearchNumber"));
+        CoilSearchNumber->setAlignment(Qt::AlignCenter);
 
         horizontalLayout_6->addWidget(CoilSearchNumber);
 
@@ -439,6 +501,7 @@ public:
 
         RegisterSearchNumber = new QLineEdit(tab_2);
         RegisterSearchNumber->setObjectName(QStringLiteral("RegisterSearchNumber"));
+        RegisterSearchNumber->setAlignment(Qt::AlignCenter);
 
         horizontalLayout_7->addWidget(RegisterSearchNumber);
 
@@ -475,8 +538,10 @@ public:
 
         tabWidget->addTab(tab_2, QString());
 
-        verticalLayout_2->addWidget(tabWidget);
+        verticalLayout_7->addWidget(tabWidget);
 
+        tabWidget->raise();
+        ShowCurrentMessage->raise();
 
         retranslateUi(Widget);
 
@@ -494,13 +559,28 @@ public:
         ClearHistoryMessageButton->setText(QApplication::translate("Widget", "\346\270\205\347\251\272\347\252\227\345\217\243", Q_NULLPTR));
         ShowCurrentMessage->setTitle(QApplication::translate("Widget", "\346\266\210\346\201\257", Q_NULLPTR));
         SerialSetting->setTitle(QApplication::translate("Widget", "\344\270\262\345\217\243", Q_NULLPTR));
-        SerialPortLabel->setText(QApplication::translate("Widget", "\344\270\262\345\217\243\345\217\267", Q_NULLPTR));
         BaudRateNumberLabel->setText(QApplication::translate("Widget", "\346\263\242\347\211\271\347\216\207", Q_NULLPTR));
+        SerialPortLabel->setText(QApplication::translate("Widget", "\344\270\262\345\217\243\345\217\267", Q_NULLPTR));
+        DataBitsNumberLabel->setText(QApplication::translate("Widget", "\346\225\260\346\215\256\344\275\215", Q_NULLPTR));
+        RefreshSerialPortButton->setText(QApplication::translate("Widget", "\345\210\267\346\226\260\344\270\262\345\217\243", Q_NULLPTR));
         BaudRateNumber->clear();
         BaudRateNumber->insertItems(0, QStringList()
          << QApplication::translate("Widget", "9600", Q_NULLPTR)
          << QApplication::translate("Widget", "19200", Q_NULLPTR)
          << QApplication::translate("Widget", "115200", Q_NULLPTR)
+        );
+        StopBitsNameLabel->setText(QApplication::translate("Widget", "\345\201\234\346\255\242\344\275\215", Q_NULLPTR));
+        DataBitsNumber->clear();
+        DataBitsNumber->insertItems(0, QStringList()
+         << QApplication::translate("Widget", "8", Q_NULLPTR)
+         << QApplication::translate("Widget", "7", Q_NULLPTR)
+         << QApplication::translate("Widget", "6", Q_NULLPTR)
+         << QApplication::translate("Widget", "5", Q_NULLPTR)
+        );
+        StopBitsName->clear();
+        StopBitsName->insertItems(0, QStringList()
+         << QApplication::translate("Widget", "1", Q_NULLPTR)
+         << QApplication::translate("Widget", "2", Q_NULLPTR)
         );
         ParityNameLabel->setText(QApplication::translate("Widget", "\346\240\241\351\252\214\344\275\215", Q_NULLPTR));
         ParityName->clear();
@@ -509,27 +589,12 @@ public:
          << QApplication::translate("Widget", "\345\245\207\346\240\241\351\252\214", Q_NULLPTR)
          << QApplication::translate("Widget", "\345\201\266\346\240\241\351\252\214", Q_NULLPTR)
         );
-        DataBitsNumberLabel->setText(QApplication::translate("Widget", "\346\225\260\346\215\256\344\275\215", Q_NULLPTR));
-        RefreshSerialPortButton->setText(QApplication::translate("Widget", "\345\210\267\346\226\260\344\270\262\345\217\243", Q_NULLPTR));
-        StopBitsName->clear();
-        StopBitsName->insertItems(0, QStringList()
-         << QApplication::translate("Widget", "1", Q_NULLPTR)
-         << QApplication::translate("Widget", "2", Q_NULLPTR)
-        );
-        DataBitsNumber->clear();
-        DataBitsNumber->insertItems(0, QStringList()
-         << QApplication::translate("Widget", "8", Q_NULLPTR)
-         << QApplication::translate("Widget", "7", Q_NULLPTR)
-         << QApplication::translate("Widget", "6", Q_NULLPTR)
-         << QApplication::translate("Widget", "5", Q_NULLPTR)
-        );
-        StopBitsNameLabel->setText(QApplication::translate("Widget", "\345\201\234\346\255\242\344\275\215", Q_NULLPTR));
+        groupBox->setTitle(QApplication::translate("Widget", "\345\274\200\345\205\263", Q_NULLPTR));
         SerialSwitchSettingButton->setText(QApplication::translate("Widget", "\346\211\223\345\274\200\344\270\262\345\217\243", Q_NULLPTR));
         MessageSetting->setTitle(QApplication::translate("Widget", "\346\212\245\346\226\207", Q_NULLPTR));
-        DataNumberLabel->setText(QApplication::translate("Widget", "\346\225\260\351\207\217", Q_NULLPTR));
         SlaveAddressLabel->setText(QApplication::translate("Widget", "\344\273\216\346\234\272\345\234\260\345\235\200", Q_NULLPTR));
+        DataNumberLabel->setText(QApplication::translate("Widget", "\346\225\260\351\207\217", Q_NULLPTR));
         BeginAddressLabel->setText(QApplication::translate("Widget", "\350\265\267\345\247\213\345\234\260\345\235\200", Q_NULLPTR));
-        FunctionCodeLabel->setText(QApplication::translate("Widget", "\345\212\237\350\203\275\347\240\201", Q_NULLPTR));
         FunctionCodeNumber->clear();
         FunctionCodeNumber->insertItems(0, QStringList()
          << QApplication::translate("Widget", "0x01", Q_NULLPTR)
@@ -537,6 +602,8 @@ public:
          << QApplication::translate("Widget", "0x0f", Q_NULLPTR)
          << QApplication::translate("Widget", "0x10", Q_NULLPTR)
         );
+        FunctionCodeLabel->setText(QApplication::translate("Widget", "\345\212\237\350\203\275\347\240\201", Q_NULLPTR));
+        groupBox_2->setTitle(QApplication::translate("Widget", "RTU", Q_NULLPTR));
         SendMessageButton->setText(QApplication::translate("Widget", "\345\217\221\351\200\201", Q_NULLPTR));
         CoilSearchNameLabel->setText(QApplication::translate("Widget", "\347\272\277\345\234\210", Q_NULLPTR));
         CoilSearchButton->setText(QApplication::translate("Widget", "Search", Q_NULLPTR));

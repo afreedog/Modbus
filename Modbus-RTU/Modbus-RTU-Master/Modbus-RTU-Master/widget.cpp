@@ -12,12 +12,18 @@ Widget::Widget(QWidget *parent) :
     connect(ui->HistoryMessageButton,&QPushButton::clicked,[=](){
         ShowHistoricalMessage();
     });
-
     //定时保存当前窗口信息
     connect(HistoryMessageClearTimer,&QTimer::timeout,[=](){
         ClearCurrentHistoryMessage();
     });
 
+    //数据搜索
+    connect(ui->CoilSearchButton,&QPushButton::clicked,[=](){
+        Search(1);
+    });
+    connect(ui->RegisterSearchButton,&QPushButton::clicked,[=](){
+        Search(2);
+    });
     //打开串口
     connect(ui->SerialSwitchSettingButton,&QPushButton::clicked,[=](){
         GetSerialPortParameters();
@@ -145,6 +151,13 @@ void Widget::InterfaceInit()
 
     //ini数据初始化显示
     ShowIniData();
+
+    //设置搜索框默认背景
+    ui->CoilSearchNumber->setPlaceholderText("0-65535");
+    ui->CoilSearchNumber->setValidator(new QIntValidator(0, 65535, this));
+
+    ui->RegisterSearchNumber->setPlaceholderText("0-65535");
+    ui->RegisterSearchNumber->setValidator(new QIntValidator(0, 65535, this));
 }
 
 
@@ -582,6 +595,19 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         return;
     }
 
+    //CRC差错校验
+    quint16 responseMessageCRC;
+    responseMessageCRC = CRC16Modbus(responseMessage.mid(0,responseMessage.size()-2),0);
+    quint16 CrcCheck;
+    CrcCheck = BondTwoUint8ToUint16((quint8)responseMessage[responseMessage.size()-2],(quint8)responseMessage[responseMessage.size()-1]);
+
+    if(CrcCheck != responseMessageCRC)
+    {
+        ui->messageBox->append("-----------异常报文----------");
+        ui->messageBox->append("校验码错误，响应报文中校验码错误！");
+        return;
+    }
+
     //与请求报文比较
     switch(responseMessageFuncCode)
     {
@@ -628,20 +654,34 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         break;
     }
 
-    //CRC差错校验
-    quint16 responseMessageCRC;
-    responseMessageCRC = CRC16Modbus(responseMessage.mid(0,responseMessage.size()-2),0);
-    quint16 CrcCheck;
-    CrcCheck = BondTwoUint8ToUint16((quint8)responseMessage[responseMessage.size()-2],(quint8)responseMessage[responseMessage.size()-1]);
-
-    if(CrcCheck != responseMessageCRC)
+    //无异常，显示查询报文数据
+    //响应报文数据
+    QByteArray DataArray;
+    DataArray = responseMessage.mid(3,responseMessage.size() - 5);
+    //请求报文 起始地址
+    quint16 BeginAddress;
+    BeginAddress = BondTwoUint8ToUint16((quint8)RequestMessageArray[2],(quint8)RequestMessageArray[3]);
+    //请求报文 数据个数
+    quint16 DataNumber;
+    DataNumber = BondTwoUint8ToUint16((quint8)RequestMessageArray[4],(quint8)RequestMessageArray[5]);
+    QString res;
+    switch(responseMessageFuncCode)
     {
-        ui->messageBox->append("-----------异常报文----------");
-        ui->messageBox->append("校验码错误，响应报文中校验码错误！");
-        return;
+    case 1:
+        res = CoilsByteArrayToQString(DataArray,DataNumber);
+        UpdateCoilsData(BeginAddress,DataNumber,res);
+        ui->messageBox->append("查询的线圈数据为："+res);
+        break;
+    case 3:
+        res = RegistersByteArrayToQString(DataArray);
+        UpdateRegistersData(BeginAddress,DataNumber,res);
+        ui->messageBox->append("查询的寄存器数据为："+res);
+        break;
     }
 
+
 }
+
 //正常报文发送
 void Widget::SendRequestMessage()
 {
@@ -959,7 +999,131 @@ void Widget::ShowIniData()
     }
 }
 
+void Widget::Search(int type)
+{
+    //1为线圈数据表搜索，2为寄存器数据表搜索
+    if(type == 1)
+    {
+        //获取用户输入的搜索地址
+        int coilIndex = ui->CoilSearchNumber->text().toInt(NULL,10);
 
+        //获取搜索位置的指针
+        QTableWidgetItem *coilItem = ui->CoilsDataTable->item(NULL,coilIndex);
+
+        //将数据表的显示设定为指定指针
+        ui->CoilsDataTable->setCurrentItem(coilItem);
+        //滚动到指向位置，并将指定位置显示在表格顶部
+        ui->CoilsDataTable->scrollToItem(coilItem,QAbstractItemView::PositionAtCenter);
+    }
+    else
+    {
+        //获取用户输入的搜索地址
+        int registerIndex = ui->RegisterSearchNumber->text().toInt(NULL,10);
+
+        //获取搜索位置的指针
+        QTableWidgetItem *registerItem = ui->RegistersDataTable->item(NULL,registerIndex);
+
+        //将数据表的显示设定为指定指针
+        ui->RegistersDataTable->setCurrentItem(registerItem);
+        //滚动到指向位置，并将指定位置显示在表格顶部
+        ui->RegistersDataTable->scrollToItem(registerItem,QAbstractItemView::PositionAtCenter);
+    }
+}
+
+QString Widget::CoilsByteArrayToQString(QByteArray DataArray,quint16 DataNumber)
+{
+    QString dataObtained;
+    //取出所读的多个线圈，并显示，数据从第九位开始
+    for(int i = 0; i < DataArray.size(); i++)
+    {
+        //先转化为2进制字符串
+        QString str = QString::number((quint8)DataArray.at(i),2);
+        //再转化为2进制整形，由二进制整形转化为8位2进制字符串前面自动补0，从而保证8位
+        str = QString("%1").arg((quint8)str.toInt(NULL,2),8,2,QChar('0'));
+        //8bit字节倒转
+        byteReverse(str);
+        //添加到数据中
+        dataObtained += str;
+    }
+    //去除填充的0位，读出请求报文请求的线圈数
+    dataObtained = dataObtained.left(DataNumber);
+
+    return dataObtained;
+
+}
+QString Widget::RegistersByteArrayToQString(QByteArray DataArray)
+{
+    QString dataObtained;
+
+    for(int i = 0; i < DataArray.size(); i += 2)
+    {
+        dataObtained += QString::number(BondTwoUint8ToUint16((quint8)DataArray.at(i),(quint8)DataArray.at(i+1)));
+        dataObtained += " ";
+    }
+
+    return dataObtained;
+}
+void Widget::WriteCoilsData(int Column, QString CoilData)
+{
+    //更新ini文件数据
+    settings->setValue("Section" + QString::number(Column + 1) + "/coil",CoilData);
+    //更新线圈数据表中数据
+    if(CoilData == "1")
+    {
+        CoilData = "ON";
+    }
+    else
+    {
+        CoilData = "OFF";
+    }
+    ui->CoilsDataTable->setItem(1,Column,new QTableWidgetItem(CoilData));
+    //设置表格内文字水平+垂直对齐
+    ui->CoilsDataTable->item(1,Column)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+}
+void Widget::UpdateCoilsData(quint16 BeginAddress, quint16 DataNumber, QString DataString)
+{
+    //锁住写入线圈数据信号，进行阻塞
+    ui->CoilsDataTable->blockSignals(true);
+    for(int i=0;i<DataNumber;i++)
+    {
+        int Column = BeginAddress + i;
+        QString coilData = DataString.at(i);
+        WriteCoilsData(Column,coilData);
+    }
+    //解锁写入线圈数据信号
+    ui->CoilsDataTable->blockSignals(false);
+}
+//写寄存器
+void Widget::WriteRegistersData(int Column, QString registerData)
+{
+    //更新ini文件数据
+    settings->setValue("Section" + QString::number(Column + 1) + "/regi",registerData);
+    //更新线圈数据表中数据
+    ui->RegistersDataTable->setItem(1,Column,new QTableWidgetItem(registerData));
+    //设置表格内文字水平+垂直对齐
+    ui->RegistersDataTable->item(1,Column)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+}
+void Widget::UpdateRegistersData(quint16 BeginAddress, quint16 DataNumber, QString DataString)
+{
+    //锁住写入寄存器数据信号，进行阻塞
+    ui->RegistersDataTable->blockSignals(true);
+    //写入寄存器
+    QString temp;
+    int j=0;
+    for(int i=0;i<DataNumber;i++)
+    {
+        while(j< DataString.size() && DataString[j] != ' ')
+        {
+            temp +=DataString[j];
+            j++;
+        }
+        WriteRegistersData(BeginAddress+i,temp);
+        temp.clear();
+        j++;
+    }
+    //解锁写入寄存器数据信号
+    ui->RegistersDataTable->blockSignals(false);
+}
 Widget::~Widget()
 {
     delete ui;
