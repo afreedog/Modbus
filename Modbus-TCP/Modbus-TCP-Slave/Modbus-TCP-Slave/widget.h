@@ -63,14 +63,14 @@ public:
 
     //默认的服务器ip地址、端口号、从机地址
     QString defaultIpAddress = "127.0.0.1";
-    qint16 defaultPortNumber = 502;
-    qint8 defaultSlaveAddress = 1;
+    quint16 defaultPortNumber = 502;
+    quint8 defaultSlaveAddress = 1;
     //从机地址
     quint8 SlaveAddress;
 
     //存放客户端Ip地址和端口
     QString MasterIpAddress;
-    qint16 MasterPortNumber;
+    quint16 MasterPortNumber;
 
     //设置默认ip
     void IpDefault();
@@ -176,7 +176,7 @@ private:
 
     //存放输入框中IP地址和端口
     QString ipAddress;
-    qint16 portNumber;
+    quint16 portNumber;
 
 
     //显示断开连接
