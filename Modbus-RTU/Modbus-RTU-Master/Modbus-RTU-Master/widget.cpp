@@ -270,6 +270,9 @@ void Widget::OpenOrCloseSerialPort()
    if(ui->SerialSwitchSettingButton->text() == "打开串口")
    {
        //打开串口
+       //关闭串口刷新按钮
+       ui->RefreshSerialPortButton->setEnabled(false);
+
        RtuSerialPort->setPortName(serialport->SerialPortSerialName);
        int openFlag = RtuSerialPort->open(QIODevice::ReadWrite);
        if(!openFlag)
@@ -295,6 +298,8 @@ void Widget::OpenOrCloseSerialPort()
    {
        if(isOpenSerialPort)
        {
+           //打开串口刷新按钮
+           ui->RefreshSerialPortButton->setEnabled(true);
            RtuSerialPort->clear();
            RtuSerialPort->close();
            isOpenSerialPort = false;
