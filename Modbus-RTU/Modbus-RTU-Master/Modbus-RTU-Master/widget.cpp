@@ -49,7 +49,7 @@ Widget::Widget(QWidget *parent) :
 void Widget::ShowCurrentTime()
 {
     QDateTime time = QDateTime::currentDateTime();
-    QString TimeFormat = time.toString("yyyy-MM-dd");
+    QString TimeFormat = time.toString(CLOCK_FORMAT);
     ui->ShowCurrentTime->setText(TimeFormat);
 }
 //时间事件函数
@@ -92,6 +92,8 @@ void Widget::InterfaceInit()
 
     //界面时间显示
     timer = startTimer(CLOCK_REFRESH);
+    settings = new QSettings(INI_FILE_PATH,QSettings::IniFormat);
+    settings->setParent(this);
 
     //初始化历史窗口
     HistoryMessageWindow = new HistoryMessageDialog(this);
@@ -141,7 +143,11 @@ void Widget::InterfaceInit()
     //设置串口打开状态，默认为false
     isOpenSerialPort = false;
 
+    //ini数据初始化显示
+    ShowIniData();
 }
+
+
 //设置最大数量背景提示
 void Widget::MaxNumberOfDefaultBackground()
 {
@@ -867,7 +873,7 @@ QByteArray Widget::InputRegisters()
     }
     return RegistersInputArr;
 }
-//11.字节反转函数
+//字节反转函数
 void Widget::byteReverse(QString &coils)
 {
     // 定义临时字符变量
@@ -916,6 +922,44 @@ QString Widget::HexByteArrayToHexString(QByteArray HexByteArr,int ConvertLen, in
     //返回转化后的十六进制字符串
     return readMes;
 }
+
+
+//将ini中的数据展示到表格
+void Widget::ShowIniData()
+{
+    for(int i = 0; i < (ADDRESS_MAX + 1); i++)
+    {
+        //地址设置
+        QString adr =  "0x" + QString("%1").arg(i,4,16,QLatin1Char('0'));
+        ui->CoilsDataTable->setItem(0,i, new QTableWidgetItem(QString(adr)));
+        ui->CoilsDataTable->item(0,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        ui->RegistersDataTable->setItem(0,i, new QTableWidgetItem(QString(adr)));
+        ui->RegistersDataTable->item(0,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        //读出线圈数据
+        QString coilData = settings->value("Section" + QString::number(i+1) + "/coil").toString();
+        //读出寄存器数据
+        QString registerData = settings->value("Section" + QString::number(i+1) + "/regi").toString();
+
+        //在线圈数据表中显示数据
+        if(coilData == "1")
+        {
+            coilData = "ON";
+        }
+        else
+        {
+            coilData = "OFF";
+        }
+        ui->CoilsDataTable->setItem(1,i,new QTableWidgetItem(coilData));
+        //设置表格内文字水平+垂直对齐
+        ui->CoilsDataTable->item(1,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        //在寄存器数据表中显示数据
+        ui->RegistersDataTable->setItem(1,i,new QTableWidgetItem(registerData));
+        //设置表格内文字水平+垂直对齐
+        ui->RegistersDataTable->item(1,i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    }
+}
+
+
 Widget::~Widget()
 {
     delete ui;

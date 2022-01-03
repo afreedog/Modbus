@@ -4,10 +4,11 @@
 #include "historymessagedialog.h"
 #include "inputdatadialog.h"
 
-#define INIFILE_PATH "../Modbus-RTU-Master/Data.ini"  //数据文件路径
+#define INI_FILE_PATH "../Modbus-RTU-Master/Data.ini"  //数据文件路径
 #define RECORD_PATH "../Modbus-RTU-Master/record.txt" //日志文件路径
+
 #define CLOCK_REFRESH 500  //时钟刷新时间
-#define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss"  //时钟显示格式
+#define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss ddd"  //时钟显示格式
 #define ADDRESS_MIN 0  //线圈和寄存器的地址最小值
 #define ADDRESS_MAX 65535  //线圈和寄存器的地址最大值
 #define READ_COIL_MINNUM 1  //请求报文读取线圈个数的最小值
@@ -18,14 +19,11 @@
 #define WRITE_COIL_MAXNUM 1968  //请求报文写入线圈个数的最大值
 #define WRITE_REGISTER_MINNUM 1 //请求报文写入寄存器个数的最小值
 #define WRITE_REGISTER_MAXNUM 123 //请求报文写入寄存器个数的最大值
-
 #define RTU_MESSAGE_MAX_BYTE 256 //RTU报文最大长度
 #define MINIMUM_MESSAGE_LENGTH 8 //接收到的请求报文最小长度
-
 #define REQUEST_MESSAGE_LENGTH_0X01_0X03 8 //0X01或0X03请求报文长度
 #define ABNORMAL_RESPONSE_LENGTH 5  //异常响应报文长度
 #define WRITE_RESPONSE_LENGTH 8 //正常写入响应报文长度
-
 
 #include <QWidget>
 
@@ -63,6 +61,10 @@ public:
 
     //界面初始化
     void InterfaceInit();
+    //数据显示初始化
+    QSettings *settings;
+
+    void ShowIniData();
     //最大数量的背景设置函数
     void MaxNumberOfDefaultBackground();
     //时钟计时器标识符
