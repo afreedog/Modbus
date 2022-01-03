@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../ModBus_RTU_slaver/historymessagedialog.h"
+#include "../../../../../other/Modbus/Modbus-RTU/Modbus-RTU-Slave/ModBus_RTU_slaver/historymessagedialog.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
