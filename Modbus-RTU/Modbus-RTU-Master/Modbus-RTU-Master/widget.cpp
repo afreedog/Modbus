@@ -38,7 +38,10 @@ Widget::Widget(QWidget *parent) :
     connect(ui->SendMessageButton,&QPushButton::clicked,[=](){
         SendRequestMessage();
     });
-
+    //超时重发
+    connect(ResendMessageTimer,&QTimer::timeout,[=](){
+        ResendRequestMessage();
+    });
     //数据接收,解析
     connect(RtuSerialPort,&QSerialPort::readyRead,[=](){
         RTUReadMessage();
@@ -68,11 +71,13 @@ void Widget::timerEvent(QTimerEvent *event)
     }
     else if(tmp == ReadMessageTimer)
     {
+
         if(isOpenSerialPort)
         {
              killTimer(ReadMessageTimer);
              if(isOpenSerialPort)
              {
+                 isReceiveResponseMessage = true;
                  ShowResponseMessage(ReceiveMessageArray);
                  ParseResponseMessage(ReceiveMessageArray);
              }
@@ -148,6 +153,14 @@ void Widget::InterfaceInit()
 
     //设置串口打开状态，默认为false
     isOpenSerialPort = false;
+
+    //初始化报文重发次数
+    ResendNumber = 0;
+    //初始化报文接收判断
+    isReceiveResponseMessage = false;
+    //报文重发计时器
+    ResendMessageTimer = new QTimer(this);
+    ResendMessageTimer->setInterval(3000);
 
     //ini数据初始化显示
     ShowIniData();
@@ -355,7 +368,6 @@ int Widget::ReceivingTime()
     {
         recTime = recTime*2;
     }
-
     return recTime;
 }
 
@@ -367,7 +379,6 @@ void Widget::RTUReadMessage()
     ReadMessageTimer = startTimer(receiveTime);
     //存入缓冲区
     ReceiveMessageArray.append(RtuSerialPort->readAll());
-
 }
 
 //报文结构体初始化  查询报文
@@ -474,10 +485,6 @@ QByteArray Widget::RequestMessageBuild0X0f0X10()
     Message.append(CrcNumber >> 8);
     Message.append(CrcNumber & 0xff);
 
-//    QString test;
-//    test = HexByteArrayToHexString(Message,Message.size(),1);
-//    qDebug() << test << endl;
-
     return Message;
 
 }
@@ -572,7 +579,38 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
     //是否是异常报文
     if(responseMessage.size() == ABNORMAL_RESPONSE_LENGTH)
     {
-        ui->messageBox->append("-----------异常报文----------");
+        //判断异常功能码是否正确
+        // 0x81 - 129 | 0x83 - 131 | 0x8f - 143 | 0x90 - 144
+        quint8 FuncCodeNumber;
+        FuncCodeNumber = (quint8)responseMessage.at(1);
+        if(FuncCodeNumber != 129 && FuncCodeNumber != 131 && FuncCodeNumber != 143 && FuncCodeNumber != 144)
+        {
+            ui->messageBox->append("-----------异常报文----------");
+            ui->messageBox->append("异常报文，报文长度错误");
+            return;
+        }
+        //判断差错码是否正常
+        quint8 ErrorCode;
+        ErrorCode = (quint8)responseMessage.at(2);
+        if(ErrorCode != 1 && ErrorCode != 2 && ErrorCode != 3)
+        {
+            ui->messageBox->append("异常响应报文，差错码错误！");
+            return;
+        }
+        //判断校验码是否正常
+        quint16 AbnormalMessageCRC;
+        AbnormalMessageCRC = BondTwoUint8ToUint16((quint8)responseMessage[3],(quint8)responseMessage[4]);
+        QByteArray AbnormalMessageData;
+        AbnormalMessageData = responseMessage.left(3);
+        quint16 AbnormalMessageCrcCheck;
+        AbnormalMessageCrcCheck = CRC16Modbus(AbnormalMessageData,0);
+        if(AbnormalMessageCRC != AbnormalMessageCrcCheck)
+        {
+            ui->messageBox->append("异常响应报文，校验码错误！");
+            return;
+        }
+        //正常异常响应报文
+        ui->messageBox->append("-----------异常响应报文----------");
         QString AbnormalFuncCode ;
         QByteArray temp;
         temp.append(responseMessage[2]);
@@ -589,7 +627,6 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         ui->messageBox->append("功能码非法，响应报文中功能码非法！");
         return;
     }
-
     //请求与响应的功能码是否一致
     quint8 RequestMessageArrayFuncCode;
     RequestMessageArrayFuncCode = (quint8)RequestMessageArray[1];
@@ -717,10 +754,36 @@ void Widget::SendRequestMessage()
 
     //报文发送
     RtuSerialPort->write(RequestMessageArray);
+    ResendMessageTimer->start();
     QString res;
     res= HexByteArrayToHexString(RequestMessageArray,RequestMessageArray.size(),1);
     TimeInformation();
     ui->messageBox->append("报文发送： "+res);
+    //设置接收报文状态为false
+    isReceiveResponseMessage = false;
+}
+//报文重发
+void Widget::ResendRequestMessage()
+{
+    if(!isReceiveResponseMessage)
+    {
+        if(ResendNumber < RESEND_MESSAGE_MAX_NUMBER)
+        {
+            RtuSerialPort->write(RequestMessageArray);
+            TimeInformation();
+            ui->messageBox->append("从站无响应，第"+QString::number(1+ResendNumber)+"次重发报文！");
+            ResendNumber++;
+        }
+        else
+        {
+            TimeInformation();
+            ui->messageBox->append("从站无响应，重传无效！");
+            //重置重传次数
+            ResendNumber = 0;
+            ResendMessageTimer->stop();
+        }
+
+    }
 }
 //接收报文显示
 void Widget::ShowResponseMessage(QByteArray responseMessage)

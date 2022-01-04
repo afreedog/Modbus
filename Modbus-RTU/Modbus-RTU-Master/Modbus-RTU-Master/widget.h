@@ -6,7 +6,6 @@
 
 #define INI_FILE_PATH "../Modbus-RTU-Master/Data.ini"  //数据文件路径
 #define RECORD_PATH "../Modbus-RTU-Master/record.txt" //日志文件路径
-
 #define CLOCK_REFRESH 500  //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss ddd"  //时钟显示格式
 #define ADDRESS_MIN 0  //线圈和寄存器的地址最小值
@@ -24,6 +23,7 @@
 #define REQUEST_MESSAGE_LENGTH_0X01_0X03 8 //0X01或0X03请求报文长度
 #define ABNORMAL_RESPONSE_LENGTH 5  //异常响应报文长度
 #define WRITE_RESPONSE_LENGTH 8 //正常写入响应报文长度
+#define RESEND_MESSAGE_MAX_NUMBER 3 //最大重传次数
 
 #include <QWidget>
 
@@ -73,6 +73,15 @@ public:
     int timer;
     //报文读取计时器
     int ReadMessageTimer;
+    //报文重发计时器
+    QTimer *ResendMessageTimer;
+
+
+    bool isReceiveResponseMessage;
+    //报文重发次数
+    quint8 ResendNumber;
+    //报文重发
+    void ResendRequestMessage();
 
     //事件函数
     void timerEvent(QTimerEvent *event);
