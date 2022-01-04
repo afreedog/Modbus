@@ -584,8 +584,8 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
         //写入数量
         if(DataNumber < WRITE_COIL_MINNUM || DataNumber > WRITE_COIL_MAXNUM)
         {
-            //发送异常报文，异常码03
-            AbnormalFunctionCode = 0x03;
+            //发送异常报文，异常码02
+            AbnormalFunctionCode = 0x02;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             //异常提示
@@ -605,16 +605,34 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
             return false;
         }
         //字节字段 写入数量
-
+        quint8 DataByteNumber;
+        DataByteNumber = (quint8)MessageArray.at(12);
+        if(DataByteNumber != (DataNumber+7)/8)
+        {
+            AbnormalFunctionCode = 0x02;
+            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
+            AbnormalMessageSend(AbnormalResponseMessage);
+            ui->messageBox->append("线圈写入非法,请求报文中字节字段与写入数量所需要的字节不一致！");
+            ShowResponseMessage(AbnormalResponseMessage);
+            return false;
+        }
         //数据项长度 字节字段
-
+        if(DataByteNumber != (MessageArray.size() - 13))
+        {
+            AbnormalFunctionCode = 0x02;
+            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
+            AbnormalMessageSend(AbnormalResponseMessage);
+            ui->messageBox->append("线圈写入非法,请求报文中数据字节字段与数据项实际字节长度不一致！");
+            ShowResponseMessage(AbnormalResponseMessage);
+            return false;
+        }
         break;
     case 16:
         //写入数量
         if(DataNumber < WRITE_REGISTER_MINNUM || DataNumber > WRITE_REGISTER_MAXNUM)
         {
             //发送异常报文，异常码03
-            AbnormalFunctionCode = 0x03;
+            AbnormalFunctionCode = 0x02;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("寄存器写入数量非法,请求报文中数据写入数量超出写入范围！");
@@ -632,7 +650,6 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
             ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
-
         //字节字段  写入数量
         quint16 ByteNumber;
         ByteNumber = (quint8)MessageArray[12];
@@ -646,7 +663,6 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
             ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
-
         //数据项长度 字节字段是否匹配
         quint8 RegistersByteNumber = MessageArray.size() - 13;
         if(RegistersByteNumber != (quint8)MessageArray[12])

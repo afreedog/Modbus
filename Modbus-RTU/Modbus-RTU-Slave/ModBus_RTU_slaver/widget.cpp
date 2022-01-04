@@ -530,10 +530,9 @@ void Widget::ShowRequstMessage(QString Message)
     //时间
     TimeInformation();
     //消息窗口显示信息
-    ui->messageEdit->append("收到来自串口："
+    ui->messageEdit->append("收到来自串口 "
                             + ui->portNumberBox->currentText()
-                            + "的报文："
-                            + '\n'
+                            + " 的报文："
                             + Message);
 }
 
@@ -645,6 +644,8 @@ bool Widget::RTUAnalysisMessage(QByteArray MessageArray)
     if(MessageArray.size() < MINIMUM_MESSAGE_LENGTH || MessageArray.size() > RTU_MESSAGE_MAX_BYTE)
     {
         //消息窗口显示信息
+        QString res = HexByteArrayToHexString(MessageArray,MessageArray.size(),1);
+        ShowRequstMessage(res);
         ui->messageEdit->append("报文长度不合法！");
         return false;
     }
@@ -749,8 +750,6 @@ bool Widget::AnalysisMessage0X010X03(MessageBasicInformation *structPt, int erro
         AbnorResMessSendAndPrompt(structPt->SlaveAddress, structPt->FuncCode, 2, 2);
         return false;
     }
-
-
     if(structPt->FuncCode == 1)
     {
         //判断请求报文的线圈数量项是否合法
@@ -798,7 +797,6 @@ bool Widget::AnalysisMessage0X0F(MessageBasicInformation *structPt, QByteArray m
         AbnorResMessSendAndPrompt(structPt->SlaveAddress, structPt->FuncCode, 2, 2);
         return false;
     }
-
     //判断请求报文的数量项是否合法
     if(structPt->Number < WRITE_COIL_MINNUM || structPt->Number > WRITE_COIL_MAXNUM)
     {
@@ -806,7 +804,6 @@ bool Widget::AnalysisMessage0X0F(MessageBasicInformation *structPt, QByteArray m
         AbnorResMessSendAndPrompt(structPt->SlaveAddress, structPt->FuncCode, 3, 3);
         return false;
     }
-
     //判断该起始地址能否写入数量项的线圈
     if((structPt->BeginAddress + structPt->Number) > (ADDRESS_MAX + 1))
     {
