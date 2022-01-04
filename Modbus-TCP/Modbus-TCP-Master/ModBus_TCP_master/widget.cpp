@@ -484,7 +484,8 @@ void Widget::TCPRequestMessage(int funcCodeIndex)
 void Widget::structInitialize(MessageBasicInformation *structPt)
 {
     //事务元标识符赋值
-    structPt->transactionIdenti = transactionIdentifier++;
+    //structPt->transactionIdenti = transactionIdentifier++;
+    structPt->transactionIdenti = (quint16)1;
     //协议标识符，ModBus协议标识符为0
     structPt->protocolIdenti = (quint16)0;
     //单元标识符赋值
@@ -938,18 +939,22 @@ bool Widget::MessageLegalJudge(QByteArray MessageArr, QByteArray requestMessageA
 {
     bool Result;
     //1. 判断接收到的报文长度是否合法，合法最小长度为写入请求报文的异常响应报文，为9字节
-    if(MessageArr.size() < 9)
+    if(MessageArr.size() < TCP_MINIMUM_MESSAGE_LENGTH)
     {
         //消息窗口显示信息
-        ui->messageEdit->append("报文长度有误！");
+        ui->messageEdit->append("报文长度错误,报文长度小于最小报文长度！");
         return false;
     }
-
+    if(MessageArr.size() > TCP_MAXIMUM_MESSAGE_LENGTH)
+    {
+        ui->messageEdit->append("报文长度错误，报文长度大于最大报文长度");
+        return false;
+    }
     //2. 判断接收到的报文与请求报文的事务元标识符是否一致
     if((MessageArr.at(0) != requestMessageArr.at(0)) || (MessageArr.at(1) != requestMessageArr.at(1)))
     {
         //消息窗口显示信息
-        ui->messageEdit->append("收到的报文不是请求报文的响应报文！");
+        ui->messageEdit->append("事务标识符错误，响应报文与请求报文的事务标识符不一致！");
         return false;
     }
 
@@ -957,7 +962,7 @@ bool Widget::MessageLegalJudge(QByteArray MessageArr, QByteArray requestMessageA
     if((MessageArr.at(2) != 0) || (MessageArr.at(3) != 0))
     {
         //消息窗口显示信息
-        ui->messageEdit->append("收到的报文不是Modbus报文！");
+        ui->messageEdit->append("协议标识符错误，收到的报文不是Modbus报文！");
         return false;
     }
 
@@ -965,7 +970,7 @@ bool Widget::MessageLegalJudge(QByteArray MessageArr, QByteArray requestMessageA
     if((MessageArr.size() - 6) != BondTwoUint8ToUint16(MessageArr.at(4),MessageArr.at(5)))
     {
         //消息窗口显示信息
-        ui->messageEdit->append("收到的报文的长度字段出现错误！");
+        ui->messageEdit->append("报文头中字节字段错误！");
         return false;
     }
 

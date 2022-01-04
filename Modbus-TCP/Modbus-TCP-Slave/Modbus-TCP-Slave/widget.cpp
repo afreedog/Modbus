@@ -108,6 +108,7 @@ void Widget::IpDefault()
         ui->ipAddressData->setText(ipAddress);
     }
 }
+//获取本地Ip地址
 QString Widget::getLocalIp()
 {
     QString hostName=QHostInfo::localHostName();            //本地主机名
@@ -272,6 +273,11 @@ void Widget::ListenTcpServer()
             return;
         }
 
+        ui->ipAddressData->setEnabled(false);
+        ui->portNumberData->setEnabled(false);
+        ui->SlaveAddressNumber->setEnabled(false);
+        ui->FlushIPAddressButton->setEnabled(false);
+
         TimeInformation();
         ui->messageBox->append("开始监听："+ipAddress+":"+QString::number(portNumber));
         ui->messageBox->append("从机地址："+QString::number(SlaveAddress));
@@ -284,6 +290,10 @@ void Widget::ListenTcpServer()
         TimeInformation();
         ui->messageBox->append("停止监听："+ipAddress+":"+QString::number(portNumber));
         ui->connectButton->setText("开始监听");
+        ui->ipAddressData->setEnabled(true);
+        ui->portNumberData->setEnabled(true);
+        ui->SlaveAddressNumber->setEnabled(true);
+        ui->FlushIPAddressButton->setEnabled(true);
 
         //停止监听端口时，关闭所有连接
         if(1 == TcpServerConnectState)
@@ -375,7 +385,14 @@ bool Widget::TcpRequestMessageAnalysis(QByteArray MessageArray)
         return false;
     }
     //MBAP报文头
-    //事务标识符（未指定，不做判断）
+    //事务标识符(指定为 00 01)
+    quint16 transactionIdentifier;
+    transactionIdentifier = BondTwoUint8ToUint16((quint8)MessageArray[0],(quint8)MessageArray[1]);
+    if(transactionIdentifier != 1)
+    {
+        ui->messageBox->append("事务标识符错误，事务标识符与本机不一致！");
+        return false;
+    }
     //协议标识符判断
     quint16 protocolNumber;
     protocolNumber = ((quint8)MessageArray[2] << 8) | (quint8)MessageArray[3];
@@ -384,7 +401,6 @@ bool Widget::TcpRequestMessageAnalysis(QByteArray MessageArray)
         ui->messageBox->append("报文协议错误，请求报文中报文协议错误！");
         return false;
     }
-
     //应用数据单元ADU长度判断
     quint16 ADULength;
     ADULength = ((quint8)MessageArray[4] << 8) | (quint8)MessageArray[5];
@@ -463,18 +479,6 @@ bool Widget::AnalysisMessage0X010X03(QByteArray MessageArray)
     //获取数据起始地址和数量
     quint16 BeginAddress;
     BeginAddress = ((quint8)MessageArray[8] << 8) | (quint8)MessageArray[9];
-    //查询报文起始地址是否非法
-    if(BeginAddress < ADDRESS_MIN || BeginAddress > ADDRESS_MAX)
-    {
-        //发送异常报文，异常码02
-        AbnormalFunctionCode = 0x02;
-        AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
-        AbnormalMessageSend(AbnormalResponseMessage);
-        //异常提示
-        ui->messageBox->append("起始地址非法，请求报文中的数据的起始地址非法！");
-        ShowResponseMessage(AbnormalResponseMessage);
-        return false;
-    }
     quint16 DataNumber;
     DataNumber = ((quint8)MessageArray[10] << 8) | (quint8)MessageArray[11];
     //查询报文数量是否合法
@@ -492,7 +496,6 @@ bool Widget::AnalysisMessage0X010X03(QByteArray MessageArray)
             ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
-
         if((BeginAddress+DataNumber-1) > ADDRESS_MAX)
         {
             //发送异常报文，异常码02
@@ -503,6 +506,7 @@ bool Widget::AnalysisMessage0X010X03(QByteArray MessageArray)
             ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
+
         break;
     case 3:
         if(DataNumber < READ_REGISTER_MINNUM || DataNumber > READ_REGISTER_MAXNUM)
@@ -527,7 +531,6 @@ bool Widget::AnalysisMessage0X010X03(QByteArray MessageArray)
         }
         break;
     }
-
 
     //正常响应
     //获取查询数据
@@ -563,18 +566,6 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
     //获取数据起始地址和数量
     quint16 BeginAddress;
     BeginAddress = ((quint8)MessageArray[8] << 8) | (quint8)MessageArray[9];
-    //报文起始地址是否非法
-    if(BeginAddress < ADDRESS_MIN || BeginAddress > ADDRESS_MAX)
-    {
-        //发送异常报文，异常码02
-        AbnormalFunctionCode = 0x02;
-        AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
-        AbnormalMessageSend(AbnormalResponseMessage);
-        //异常提示
-        ui->messageBox->append("起始地址非法，请求报文中的数据的起始地址非法！");
-        ShowResponseMessage(AbnormalResponseMessage);
-        return false;
-    }
     quint16 DataNumber;
     DataNumber = ((quint8)MessageArray[10] << 8) | (quint8)MessageArray[11];
     //报文数量是否合法
@@ -584,8 +575,8 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
         //写入数量
         if(DataNumber < WRITE_COIL_MINNUM || DataNumber > WRITE_COIL_MAXNUM)
         {
-            //发送异常报文，异常码02
-            AbnormalFunctionCode = 0x02;
+            //发送异常报文，异常码03
+            AbnormalFunctionCode = 0x03;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             //异常提示
@@ -609,7 +600,7 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
         DataByteNumber = (quint8)MessageArray.at(12);
         if(DataByteNumber != (DataNumber+7)/8)
         {
-            AbnormalFunctionCode = 0x02;
+            AbnormalFunctionCode = 0x03;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("线圈写入非法,请求报文中字节字段与写入数量所需要的字节不一致！");
@@ -619,7 +610,7 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
         //数据项长度 字节字段
         if(DataByteNumber != (MessageArray.size() - 13))
         {
-            AbnormalFunctionCode = 0x02;
+            AbnormalFunctionCode = 0x03;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("线圈写入非法,请求报文中数据字节字段与数据项实际字节长度不一致！");
@@ -632,7 +623,7 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
         if(DataNumber < WRITE_REGISTER_MINNUM || DataNumber > WRITE_REGISTER_MAXNUM)
         {
             //发送异常报文，异常码03
-            AbnormalFunctionCode = 0x02;
+            AbnormalFunctionCode = 0x03;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("寄存器写入数量非法,请求报文中数据写入数量超出写入范围！");
@@ -656,7 +647,7 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
 
         if((2*DataNumber) != ByteNumber)
         {
-            AbnormalFunctionCode = 0x02;
+            AbnormalFunctionCode = 0x03;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("字节字段错误,请求报文中数据字节数与写入数量对应的字节数不一致！");
@@ -667,7 +658,7 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
         quint8 RegistersByteNumber = MessageArray.size() - 13;
         if(RegistersByteNumber != (quint8)MessageArray[12])
         {
-            AbnormalFunctionCode = 0x02;
+            AbnormalFunctionCode = 0x03;
             AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
             AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("数据项字节错误,请求报文中数据项字节数与数据字节字段不一致！");
@@ -1062,7 +1053,6 @@ void Widget::AbnormalMessageSend(QByteArray Message)
 {
       tcpReceiveSocket->write(Message);
 }
-
 
 //正常报文响应发送
 void Widget::NormalResponseMessageSend(QByteArray MessageArray)

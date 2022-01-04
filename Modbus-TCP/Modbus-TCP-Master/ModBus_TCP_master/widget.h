@@ -47,6 +47,8 @@
 #define WRITE_REGISTER_VALUE_MINNUM 0 //请求报文写入寄存器数值的最小值
 #define WRITE_REGISTER_VALUE_MAXNUM 65535 //请求报文写入寄存器数值的最大值
 #define REQUEST_MESSAGE_LENGTH_0X01_0X03 12 //0X01或0X03请求报文长度
+#define TCP_MINIMUM_MESSAGE_LENGTH 9      //TCP 最小报文长度
+#define TCP_MAXIMUM_MESSAGE_LENGTH 259    //TCP 最大报文长度
 
 namespace Ui {
 class Widget;

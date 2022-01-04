@@ -75,8 +75,6 @@ public:
     int ReadMessageTimer;
     //报文重发计时器
     QTimer *ResendMessageTimer;
-
-
     bool isReceiveResponseMessage;
     //报文重发次数
     quint8 ResendNumber;
