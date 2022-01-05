@@ -9,7 +9,7 @@ InputDataDialog::InputDataDialog(QWidget *parent) :
     this->setFixedSize(500,200);
     connect(ui->inputDialogLineEdit,&QLineEdit::textChanged,[=](){
          quint16 number = ui->inputDialogLineEdit->text().count();
-         ui->Number->setText("当前输入字符个数为："+QString::number(number));
+         ui->number->setText("当前输入字符个数为："+QString::number(number));
     });
 }
 
@@ -17,7 +17,7 @@ QString InputDataDialog::getText(QString title, QString writeGui)
 {
     setWindowTitle(title);
     ui->inputDialogLabel->setText(writeGui);
-    ui->Number->setText("当前输入字符个数为："+QString::number(0));
+    ui->number->setText("当前输入字符个数为："+QString::number(0));
     exec();
 
     return this->ui->inputDialogLineEdit->text();
