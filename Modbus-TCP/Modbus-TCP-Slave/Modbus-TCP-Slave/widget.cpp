@@ -600,21 +600,21 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
         DataByteNumber = (quint8)MessageArray.at(12);
         if(DataByteNumber != (DataNumber+7)/8)
         {
-            AbnormalFunctionCode = 0x03;
-            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
-            AbnormalMessageSend(AbnormalResponseMessage);
+//            AbnormalFunctionCode = 0x03;
+//            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
+//            AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("线圈写入非法,请求报文中字节字段与写入数量所需要的字节不一致！");
-            ShowResponseMessage(AbnormalResponseMessage);
+           // ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
         //数据项长度 字节字段
         if(DataByteNumber != (MessageArray.size() - 13))
         {
-            AbnormalFunctionCode = 0x03;
-            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
-            AbnormalMessageSend(AbnormalResponseMessage);
+//            AbnormalFunctionCode = 0x03;
+//            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
+//            AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("线圈写入非法,请求报文中数据字节字段与数据项实际字节长度不一致！");
-            ShowResponseMessage(AbnormalResponseMessage);
+            //ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
         break;
@@ -647,22 +647,22 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
 
         if((2*DataNumber) != ByteNumber)
         {
-            AbnormalFunctionCode = 0x03;
-            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
-            AbnormalMessageSend(AbnormalResponseMessage);
+//            AbnormalFunctionCode = 0x03;
+//            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
+//            AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("字节字段错误,请求报文中数据字节数与写入数量对应的字节数不一致！");
-            ShowResponseMessage(AbnormalResponseMessage);
+//            ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
         //数据项长度 字节字段是否匹配
         quint8 RegistersByteNumber = MessageArray.size() - 13;
         if(RegistersByteNumber != (quint8)MessageArray[12])
         {
-            AbnormalFunctionCode = 0x03;
-            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
-            AbnormalMessageSend(AbnormalResponseMessage);
+//            AbnormalFunctionCode = 0x03;
+//            AbnormalResponseMessage = AbnormalMessageBuild(MessageArray,AbnormalFunctionCode);
+//            AbnormalMessageSend(AbnormalResponseMessage);
             ui->messageBox->append("数据项字节错误,请求报文中数据项字节数与数据字节字段不一致！");
-            ShowResponseMessage(AbnormalResponseMessage);
+//            ShowResponseMessage(AbnormalResponseMessage);
             return false;
         }
         break;

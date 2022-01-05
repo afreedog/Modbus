@@ -2,6 +2,7 @@
 #define INPUTDIALOG_H
 
 #include <QDialog>
+#include <QDebug>
 
 namespace Ui {
 class inputDialog;

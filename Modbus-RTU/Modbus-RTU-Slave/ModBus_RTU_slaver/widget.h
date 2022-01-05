@@ -7,20 +7,16 @@
 
 #define CLOCK_REFRESH 500  //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss dddd"  //时钟显示格式
-
 #define ADDRESS_MIN 0  //线圈和寄存器的地址最小值
 #define ADDRESS_MAX 65535  //线圈和寄存器的地址最大值
-
 #define READ_COIL_MINNUM 1  //请求报文读取线圈个数的最小值
 #define READ_COIL_MAXNUM 2000  //请求报文读取线圈个数的最大值
 #define READ_REGISTER_MINNUM 1 //请求报文读取寄存器个数的最小值
 #define READ_REGISTER_MAXNUM 125 //请求报文读取寄存器个数的最大值
-
 #define WRITE_COIL_MINNUM 1  //请求报文写入线圈个数的最小值
 #define WRITE_COIL_MAXNUM 1968  //请求报文写入线圈个数的最大值
 #define WRITE_REGISTER_MINNUM 1 //请求报文写入寄存器个数的最小值
 #define WRITE_REGISTER_MAXNUM 123 //请求报文写入寄存器个数的最大值
-
 #define READ_MESSAGE_TIME_LENGTH 300  //接收请求报文的时间为300ms
 #define RTU_MESSAGE_MAX_BYTE 256 //RTU报文最大长度
 #define MINIMUM_MESSAGE_LENGTH 8 //接收到的请求报文最小长度

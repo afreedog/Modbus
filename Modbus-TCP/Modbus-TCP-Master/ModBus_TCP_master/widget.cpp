@@ -79,6 +79,21 @@ Widget::Widget(QWidget *parent) :
     connect(ui->RegisterSearchButton,&QPushButton::clicked,[=](){
         Search(2);
     });
+    connect(ui->beginAddressLineEdit,&QLineEdit::textChanged,[=](){
+        if(ui->beginAddressLineEdit->text().toInt()+ui->numLineEdit->text().toInt() > 65536)
+        {
+            QMessageBox::warning(this,"提示","请检查起始地址和数量是否合法！",QMessageBox::Ok,QMessageBox::NoButton);
+            ui->beginAddressLineEdit->clear();
+        }
+
+    });
+    connect(ui->numLineEdit,&QLineEdit::textChanged,[=](){
+        if(ui->beginAddressLineEdit->text().toInt()+ui->numLineEdit->text().toInt() > 65536)
+        {
+              QMessageBox::warning(this,"提示","请检查起始地址和数量是否合法！",QMessageBox::Ok,QMessageBox::NoButton);
+            ui->numLineEdit->clear();
+        }
+    });
 }
 
 /*****************************************************时间****************************************************/
@@ -149,6 +164,7 @@ void Widget::RequestInit()
     ui->beginAddressLineEdit->setValidator(new QIntValidator(ADDRESS_MIN, ADDRESS_MAX, this));
     //设置数量的背景提示
     ui->numLineEdit->setPlaceholderText("1 - 2000");
+    ui->numLineEdit->setValidator(new QIntValidator(1,2000,this));
 
 }
 

@@ -999,13 +999,7 @@ void Widget::AbnorResMessSendAndPrompt(quint8 localAddr, quint8 funcCode, int ab
     QString responseMessageStr;
     QString abnorResMessPrompt;
 
-    //得到异常响应报文数组
-    responseMessageArr = AbnormalResponseMessage(localAddr, funcCode, abnorCode);
-    //生成显示报文字符串，加空格
-    responseMessageStr = HexByteArrayToHexString(responseMessageArr, ABNORMAL_RESPONSE_LENGTH, 1);
 
-    //发送响应报文
-    serialPort->write(responseMessageArr);
 
     //消息窗口显示错误类型
     switch (errorMark)
@@ -1048,12 +1042,23 @@ void Widget::AbnorResMessSendAndPrompt(quint8 localAddr, quint8 funcCode, int ab
     case 5:
     {
         abnorResMessPrompt = "该请求报文的字节字段不合法！";
+        ui->messageEdit->append(abnorResMessPrompt);
+        return;
         break;
     }
     }
 
     //显示异常
     ui->messageEdit->append(abnorResMessPrompt);
+
+    //得到异常响应报文数组
+    responseMessageArr = AbnormalResponseMessage(localAddr, funcCode, abnorCode);
+    //生成显示报文字符串，加空格
+    responseMessageStr = HexByteArrayToHexString(responseMessageArr, ABNORMAL_RESPONSE_LENGTH, 1);
+
+    //发送响应报文
+    serialPort->write(responseMessageArr);
+
     //显示异常响应报文
     ui->messageEdit->append("已向主机发送异常响应报文：" + responseMessageStr);
 }
