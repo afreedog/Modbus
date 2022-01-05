@@ -52,6 +52,22 @@ Widget::Widget(QWidget *parent) :
         ClearCurrentHistoryMessage();
     });
 
+    connect(ui->BeginAddressNumber,&QLineEdit::textChanged,[=](){
+        if(ui->BeginAddressNumber->text().toInt()+ui->DataNumber->text().toInt() > 65536)
+        {
+            QMessageBox::warning(this,"提示","请检查起始地址和数量是否合法！",QMessageBox::Ok,QMessageBox::NoButton);
+            ui->BeginAddressNumber->clear();
+        }
+
+    });
+    connect(ui->DataNumber,&QLineEdit::textChanged,[=](){
+        if(ui->BeginAddressNumber->text().toInt()+ui->DataNumber->text().toInt() > 65536)
+        {
+            QMessageBox::warning(this,"提示","请检查起始地址和数量是否合法！",QMessageBox::Ok,QMessageBox::NoButton);
+            ui->DataNumber->clear();
+        }
+    });
+
 }
 /***************************显示时间信息**************************/
 //时钟函数
@@ -136,8 +152,11 @@ void Widget::InterfaceInit()
 
     //设置起始地址背景提示
     ui->BeginAddressNumber->setPlaceholderText("0-65535");
+    ui->BeginAddressNumber->setValidator(new QIntValidator(0,65535,this));
+
     //设置最大数量提示 0x01
     ui->DataNumber->setPlaceholderText("1-2000");
+    ui->DataNumber->setValidator(new QIntValidator(1,2000,this));
 
     //设置消息框为只读
     ui->messageBox->setReadOnly(true);
