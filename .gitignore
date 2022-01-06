@@ -52,3 +52,7 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+#qt RTU unitTest Debug
+Modbus-TCP/TCPuniteTest/debug/
+Modbus-RTU/RTUuniteTest/debug/

@@ -139,8 +139,8 @@ public:
     //CRC校验码
     quint16 CRC16Modbus(const QByteArray &data,int flag);
     //报文生成
-    QByteArray RequestMessageBuild0X010X03();
-    QByteArray RequestMessageBuild0X0f0X10();
+    QByteArray RequestMessageBuild0X010X03(RequestMessageStruct *requestmessage);
+    QByteArray RequestMessageBuild0X0f0X10(RequestMessageStruct *requestmessage,QByteArray Data);
 
     //存放响应报文
     QByteArray RequestMessageArray;
@@ -169,7 +169,7 @@ public:
     void UpdateCoilsData(quint16 BeginAddress,quint16 DataNumber,QString DataString);
     void UpdateRegistersData(quint16 BeginAddress,quint16 DataNumber,QString DataString);
     //接收报文解析
-    void ParseResponseMessage(QByteArray responseMessage);
+    bool ParseResponseMessage(QByteArray responseMessage,QByteArray RequestMessageArray);
 
 
     //16进制字节数组转16进制字符串
