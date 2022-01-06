@@ -60,3 +60,4 @@ Modbus-RTU/RTUuniteTest/debug/
 Modbus-TCP/TCPMasterUnitTest/debug/
 Modbus-RTU/RTUMasterUnitTest/debug/
 Modbus-RTU/RTUSlaveUnitTest/debug/
+Modbus-TCP/TCPSlaveUnitTest/debug/
