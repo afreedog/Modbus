@@ -35,6 +35,7 @@ public:
     Widget widget;
 
 private Q_SLOTS:
+    //TCP主站
     //多线圈字符串合法性判断函数测试
     void test_coilsLegality_data();
     void test_coilsLegality();
@@ -86,12 +87,18 @@ private Q_SLOTS:
     //0X010功能码报文处理函数测试数据
     void test_TCP0X10FuncCodeProcess_data();
     void test_TCP0X10FuncCodeProcess();
+
+
+    //TCP从站
+
+
 };
 
 TCPtestTest::TCPtestTest()
 {
 }
 
+//TCP主站单元测试
 //读输出线圈0x01和读输出寄存器0x03请求报文构建函数测试数据
 void TCPtestTest::test_RequestMessage0x010x03Build_data()
 {
