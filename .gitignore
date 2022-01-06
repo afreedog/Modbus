@@ -55,4 +55,8 @@ compile_commands.json
 
 #qt RTU unitTest Debug
 Modbus-TCP/TCPuniteTest/debug/
-Modbus-RTU/RTUuniteTest/debug/
+
+Modbus-TCP/TCPMasterUnitTest/debug/
+Modbus-TCP/TCPSlaveUnitTest/debug/
+Modbus-RTU/RTUMasterUnitTest/debug/
+Modbus-RTU/RTUSlaveUnitTest/debug/
