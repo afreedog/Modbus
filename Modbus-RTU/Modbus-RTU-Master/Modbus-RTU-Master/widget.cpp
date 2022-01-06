@@ -730,12 +730,12 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
     switch(responseMessageFuncCode)
     {
     case 1:
-        res = CoilsByteArrayToQString(DataArray,DataNumber);
+        res = HexByteArrayToBinString(DataArray,DataNumber);
         UpdateCoilsData(BeginAddress,DataNumber,res);
         ui->messageBox->append("查询的线圈数据为："+res);
         break;
     case 3:
-        res = RegistersByteArrayToQString(DataArray);
+        res = HexByteArrayToDecString(DataArray);
         UpdateRegistersData(BeginAddress,DataNumber,res);
         ui->messageBox->append("查询的寄存器数据为："+res);
         break;
@@ -1118,7 +1118,7 @@ void Widget::Search(int type)
     }
 }
 
-QString Widget::CoilsByteArrayToQString(QByteArray DataArray,quint16 DataNumber)
+QString Widget::HexByteArrayToBinString(QByteArray DataArray,quint16 DataNumber)
 {
     QString dataObtained;
     //取出所读的多个线圈，并显示，数据从第九位开始
@@ -1139,7 +1139,7 @@ QString Widget::CoilsByteArrayToQString(QByteArray DataArray,quint16 DataNumber)
     return dataObtained;
 
 }
-QString Widget::RegistersByteArrayToQString(QByteArray DataArray)
+QString Widget::HexByteArrayToDecString(QByteArray DataArray)
 {
     QString dataObtained;
 

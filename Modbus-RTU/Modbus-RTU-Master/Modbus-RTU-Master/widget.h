@@ -158,9 +158,9 @@ public:
     //显示接收报文
     void ShowResponseMessage(QByteArray responseMessage);
     //将16进制线圈数据转换为2进制字符串
-    QString CoilsByteArrayToQString(QByteArray DataArray,quint16 DataNumber);
+    QString HexByteArrayToBinString(QByteArray DataArray,quint16 DataNumber);
     //将16进制寄存器转化为10进制字符串
-    QString RegistersByteArrayToQString(QByteArray DataArray);
+    QString HexByteArrayToDecString(QByteArray DataArray);
 
     //写入单个线圈或寄存器
     void WriteCoilsData(int Column,QString CoilData);
