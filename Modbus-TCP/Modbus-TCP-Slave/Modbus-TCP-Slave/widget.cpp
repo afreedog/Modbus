@@ -367,6 +367,7 @@ void Widget::ShowResponseMessage(QByteArray MessageArray)
     //ui->messageBox->append("请求报文地址："+MasterIpAddress + ":"+QString::number(MasterPortNumber));
     ui->messageBox->append("响应报文内容："+res);
 }
+
 //解析请求报文
 bool Widget::TcpRequestMessageAnalysis(QByteArray MessageArray)
 {
@@ -461,6 +462,7 @@ bool Widget::TcpRequestMessageAnalysis(QByteArray MessageArray)
     }
     return AnalysisResult;
 }
+
 
 //0x01 0x03 生成正常响应报文 并调用报文发送函数
 bool Widget::AnalysisMessage0X010X03(QByteArray MessageArray)
@@ -1013,8 +1015,6 @@ QByteArray Widget::NormalResponseMessageBuild0X010X03(QByteArray MessageArray,QB
     }
     return RespondeMessageArr;
 }
-//异常报文判断
-
 
 //异常报文生成
 QByteArray Widget::AbnormalMessageBuild(QByteArray MessageArray,quint8 AbnormalFunctionCode)
