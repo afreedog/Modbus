@@ -96,7 +96,7 @@ void Widget::timerEvent(QTimerEvent *event)
              {
                  isReceiveResponseMessage = true;
                  ShowResponseMessage(ReceiveMessageArray);
-                 ParseResponseMessage(ReceiveMessageArray);
+                 ParseResponseMessage(ReceiveMessageArray,RequestMessageArray);
              }
              ReceiveMessageArray.clear();
         }
@@ -192,8 +192,6 @@ void Widget::InterfaceInit()
     ui->RegisterSearchNumber->setPlaceholderText("0-65535");
     ui->RegisterSearchNumber->setValidator(new QIntValidator(0, 65535, this));
 }
-
-
 //设置最大数量背景提示
 void Widget::MaxNumberOfDefaultBackground()
 {
@@ -390,7 +388,6 @@ int Widget::ReceivingTime()
     }
     return recTime;
 }
-
 void Widget::RTUReadMessage()
 {
     //获取当前接收缓冲时间
@@ -400,7 +397,6 @@ void Widget::RTUReadMessage()
     //存入缓冲区
     ReceiveMessageArray.append(RtuSerialPort->readAll());
 }
-
 //报文结构体初始化  查询报文
 void Widget::RequestMessageStructInitialization()
 {
@@ -446,9 +442,8 @@ void Widget::RequestMessageStructInitialization()
     requestmessage->DataNumber = DataNumber;
 }
 //0x01 0x03 正常报文生成
-QByteArray Widget::RequestMessageBuild0X010X03()
+QByteArray Widget::RequestMessageBuild0X010X03(RequestMessageStruct *requestmessage)
 {
-    RequestMessageStructInitialization();
 
     //声明字节数组
     QByteArray data;
@@ -470,21 +465,11 @@ QByteArray Widget::RequestMessageBuild0X010X03()
     return data;
 }
 
-QByteArray Widget::RequestMessageBuild0X0f0X10()
+QByteArray Widget::RequestMessageBuild0X0f0X10(RequestMessageStruct *requestmessage,QByteArray Data)
 {
-    RequestMessageStructInitialization();
     //声明字节数组
     // 设备地址+功能码+起始地址+数量+字节数+n字节数据+差错校验
     // 1+1+2+2+1+n+2
-    QByteArray Data;
-    if(ui->FunctionCodeNumber->currentText().toInt(NULL,16) == 0x0f)
-    {
-           Data  = InputCoils();
-    }
-    else if(ui->FunctionCodeNumber->currentText().toInt(NULL,16) == 0x10)
-    {
-           Data  = InputRegisters();
-    }
 
     QByteArray data;
     data.resize(REQUEST_MESSAGE_LENGTH_0X01_0X03 - 1);
@@ -572,7 +557,7 @@ quint16 Widget::CRC16Modbus(const QByteArray &data,int flag)
 }
 
 //报文解析
-void Widget::ParseResponseMessage(QByteArray responseMessage)
+bool Widget::ParseResponseMessage(QByteArray responseMessage,QByteArray RequestMessageArray)
 {
     //RequestMessageArray 接收报文
 
@@ -581,20 +566,23 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
     {
         ui->messageBox->append("-----------异常报文----------");
         ui->messageBox->append("报文长度错误，超出RTU最大报文长度！");
-        return;
+        qDebug() << "最大长度错误" << endl;
+        return false;
     }
     if(responseMessage.size() < ABNORMAL_RESPONSE_LENGTH)
     {
         ui->messageBox->append("-----------异常报文----------");
         ui->messageBox->append("报文长度错误,小于RTU最小报文长度！");
-        return;
+        qDebug() << "最小长度错误" << endl;
+        return false;
     }
     //从机地址是否正确
     if(RequestMessageArray[0] != responseMessage[0])
     {
         ui->messageBox->append("-----------异常报文----------");
         ui->messageBox->append("从机地址错误，响应报文与请求报文的从机地址不一致！");
-        return;
+        qDebug() << "从机地址错误" << endl;
+        return false;
     }
     //是否是异常报文
     if(responseMessage.size() == ABNORMAL_RESPONSE_LENGTH)
@@ -603,11 +591,13 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         // 0x81 - 129 | 0x83 - 131 | 0x8f - 143 | 0x90 - 144
         quint8 FuncCodeNumber;
         FuncCodeNumber = (quint8)responseMessage.at(1);
-        if(FuncCodeNumber != 129 && FuncCodeNumber != 131 && FuncCodeNumber != 143 && FuncCodeNumber != 144)
+        qDebug() << QString::number(FuncCodeNumber);
+        if(FuncCodeNumber != 0x81 && FuncCodeNumber != 0x83 && FuncCodeNumber != 0x8f && FuncCodeNumber != 0x90)
         {
             ui->messageBox->append("-----------异常报文----------");
             ui->messageBox->append("异常报文，报文长度错误");
-            return;
+            qDebug() << "异常报文，报文长度错误" << endl;
+            return false;
         }
         //判断差错码是否正常
         quint8 ErrorCode;
@@ -615,7 +605,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         if(ErrorCode != 1 && ErrorCode != 2 && ErrorCode != 3)
         {
             ui->messageBox->append("异常响应报文，差错码错误！");
-            return;
+            qDebug() << "异常报文，差错码错误" << endl;
+            return false;
         }
         //判断校验码是否正常
         quint16 AbnormalMessageCRC;
@@ -627,7 +618,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         if(AbnormalMessageCRC != AbnormalMessageCrcCheck)
         {
             ui->messageBox->append("异常响应报文，校验码错误！");
-            return;
+            qDebug() << "异常报文，校验码错误" << endl;
+            return false;
         }
         //正常异常响应报文
         ui->messageBox->append("-----------异常响应报文----------");
@@ -636,7 +628,7 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         temp.append(responseMessage[2]);
         AbnormalFuncCode = HexByteArrayToHexString(temp,temp.size(),1);
         ui->messageBox->append("异常功能码为："+AbnormalFuncCode);
-        return;
+        return true;
     }
     //功能码是否合法
     quint8 responseMessageFuncCode;
@@ -645,7 +637,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
     {
         ui->messageBox->append("-----------异常报文----------");
         ui->messageBox->append("功能码非法，响应报文中功能码非法！");
-        return;
+        qDebug() << "功能码非法" << endl;
+        return false;
     }
     //请求与响应的功能码是否一致
     quint8 RequestMessageArrayFuncCode;
@@ -654,7 +647,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
     {
         ui->messageBox->append("-----------异常报文----------");
         ui->messageBox->append("功能码错误，响应报文与请求报文中的功能码不一致！");
-        return;
+        qDebug() << "请求响应功能码不一致错误" << endl;
+        return false;
     }
 
     //CRC差错校验
@@ -667,7 +661,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
     {
         ui->messageBox->append("-----------异常报文----------");
         ui->messageBox->append("校验码错误，响应报文中校验码错误！");
-        return;
+        qDebug() << "校验码错误" << endl;
+        return false;
     }
 
     //与请求报文比较
@@ -684,7 +679,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         {
             ui->messageBox->append("-----------异常报文----------");
             ui->messageBox->append("字节数错误，响应报文中数据域字节数和实际数据字节总数不一致！");
-            return;
+            qDebug() << "1，3 字节字段错误" << endl;
+            return false;
         }
         break;
     case 15:
@@ -700,7 +696,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         {
              ui->messageBox->append("-----------异常报文----------");
              ui->messageBox->append("起始地址错误，响应报文中起始地址与请求报文的不一致！");
-             return;
+             qDebug() << "15，16字节字段错误" << endl;
+             return false;
         }
         //查询数量是否一致
         quint16 responseMessageNumber;
@@ -711,7 +708,8 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         {
             ui->messageBox->append("-----------异常报文----------");
             ui->messageBox->append("数量错误，响应报文中写入数据数量与请求报文的不一致！");
-            return;
+            qDebug() << "查询数量不一致错误" << endl;
+            return false;
         }
         break;
     }
@@ -741,7 +739,7 @@ void Widget::ParseResponseMessage(QByteArray responseMessage)
         break;
     }
 
-
+    return true;
 }
 
 //正常报文发送
@@ -752,16 +750,25 @@ void Widget::SendRequestMessage()
     {
         int FuncCode;
         FuncCode = ui->FunctionCodeNumber->currentText().toInt(NULL,16);
-
+        RequestMessageStructInitialization();
         switch(FuncCode)
         {
         case 0x01:
         case 0x03:
-            RequestMessageArray = RequestMessageBuild0X010X03();
+            RequestMessageArray = RequestMessageBuild0X010X03(requestmessage);
             break;
         case 0x0f:
         case 0x10:
-            RequestMessageArray = RequestMessageBuild0X0f0X10();
+            QByteArray Data;
+            if(ui->FunctionCodeNumber->currentText().toInt(NULL,16) == 0x0f)
+            {
+                   Data  = InputCoils();
+            }
+            else if(ui->FunctionCodeNumber->currentText().toInt(NULL,16) == 0x10)
+            {
+                   Data  = InputRegisters();
+            }
+            RequestMessageArray = RequestMessageBuild0X0f0X10(requestmessage,Data);
             break;
         }
     }
@@ -1051,7 +1058,6 @@ QString Widget::HexByteArrayToHexString(QByteArray HexByteArr,int ConvertLen, in
     return readMes;
 }
 
-
 //将ini中的数据展示到表格
 void Widget::ShowIniData()
 {
@@ -1139,6 +1145,7 @@ QString Widget::CoilsByteArrayToQString(QByteArray DataArray,quint16 DataNumber)
     return dataObtained;
 
 }
+
 QString Widget::RegistersByteArrayToQString(QByteArray DataArray)
 {
     QString dataObtained;
@@ -1149,7 +1156,7 @@ QString Widget::RegistersByteArrayToQString(QByteArray DataArray)
         dataObtained += " ";
     }
 
-    return dataObtained;
+    return dataObtained.left(dataObtained.size() -1);
 }
 void Widget::WriteCoilsData(int Column, QString CoilData)
 {
