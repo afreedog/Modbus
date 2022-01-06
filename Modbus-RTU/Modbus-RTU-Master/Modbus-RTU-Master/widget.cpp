@@ -69,6 +69,7 @@ Widget::Widget(QWidget *parent) :
     });
 
 }
+
 /***************************显示时间信息**************************/
 //时钟函数
 void Widget::ShowCurrentTime()
