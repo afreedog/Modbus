@@ -470,7 +470,6 @@ QByteArray Widget::RequestMessageBuild0X010X03(RequestMessageStruct *requestmess
 
 QByteArray Widget::RequestMessageBuild0X0f0X10(RequestMessageStruct *requestmessage,QByteArray Data)
 {
-
     //声明字节数组
     // 设备地址+功能码+起始地址+数量+字节数+n字节数据+差错校验
     // 1+1+2+2+1+n+2
@@ -721,11 +720,13 @@ bool Widget::ParseResponseMessage(QByteArray responseMessage,QByteArray RequestM
     case 1:
         res = HexByteArrayToBinString(DataArray,DataNumber);
         UpdateCoilsData(BeginAddress,DataNumber,res);
+        ui->messageBox->append("起始地址为："+QString::number(BeginAddress)+" 数量："+QString::number(DataNumber));
         ui->messageBox->append("查询的线圈数据为："+res);
         break;
     case 3:
         res = HexByteArrayToDecString(DataArray);
         UpdateRegistersData(BeginAddress,DataNumber,res);
+        ui->messageBox->append("起始地址为："+QString::number(BeginAddress)+" 数量："+QString::number(DataNumber));
         ui->messageBox->append("查询的寄存器数据为："+res);
         break;
     }
