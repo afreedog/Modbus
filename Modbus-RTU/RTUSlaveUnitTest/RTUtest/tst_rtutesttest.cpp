@@ -34,26 +34,6 @@ public:
     Widget widget;
 
 private Q_SLOTS:
-    //RTU主站
-    //0x01 0x03请求报文生成测试
-    //void test_RequestMessageBuild0x010x03_data();
-    //void test_RequestMessageBuild0x010x03();
-
-    //0x0f 0x10请求报文生成测试
-    //void test_RequestMessageBuild0x0f0x10_data();
-    //void test_RequestMessageBuild0x0f0x10();
-
-    //线圈16进制字节数组转2进制字符串
-    //void test_CoilsByteArrayToQString_data();
-    //void test_CoilsByteArrayToQString_();
-
-    //寄存器16进制字节数组转10进制字符串
-    //void test_RegistersByteArrayToQString_data();
-    //void test_RegistersByteArrayToQString();
-
-    //解析响应报文测试
-    //void test_ParseResponseMessage_data();
-    //void test_ParseResponseMessage();
 
     //RTU从站
     //解析请求报文测试

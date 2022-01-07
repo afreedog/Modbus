@@ -315,7 +315,7 @@ void RTUtestTest::test_CoilsByteArrayToQString()
     QFETCH(QByteArray,Coils);
     QFETCH(quint16,Number);
     QFETCH(QString, Result);
-    QString result = widget.CoilsByteArrayToQString(Coils,Number);
+    QString result = widget.HexByteArrayToBinString(Coils,Number);
     QCOMPARE(result, Result);
 }
 //寄存器16进制字节数组转10进制字符串
@@ -356,7 +356,7 @@ void RTUtestTest::test_RegistersByteArrayToQString()
 {
     QFETCH(QByteArray, registers);
     QFETCH(QString, ResultString);
-    QString result = widget.RegistersByteArrayToQString(registers);
+    QString result = widget.HexByteArrayToDecString(registers);
     QCOMPARE(result, ResultString);
 }
 
