@@ -18,12 +18,11 @@
 #define WRITE_REGISTER_MINNUM 1 //请求报文写入寄存器个数的最小值
 #define WRITE_REGISTER_MAXNUM 123 //请求报文写入寄存器个数的最大值
 #define READ_MESSAGE_TIME_LENGTH 300  //接收请求报文的时间为300ms
-#define RTU_MESSAGE_MAX_BYTE 256 //RTU报文最大长度
+#define RTU_MESSAGE_MAX_BYTE 255 //RTU报文最大长度
 #define MINIMUM_MESSAGE_LENGTH 8 //接收到的请求报文最小长度
 #define REQUEST_MESSAGE_LENGTH_0X01_0X03 8 //接收到的0X01或0X03请求报文长度
 #define ABNORMAL_RESPONSE_LENGTH 5  //异常响应报文长度
 #define WRITE_RESPONSE_LENGTH 8 //正常写入响应报文长度
-
 #include "historymessagedialog.h"
 
 #include <QWidget>

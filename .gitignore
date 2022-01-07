@@ -53,9 +53,8 @@ compile_commands.json
 
 *_qmlcache.qrc
 
+<<<<<<< HEAD
 #qt RTU unitTest Debug
-Modbus-TCP/TCPuniteTest/debug/
-
 Modbus-TCP/TCPMasterUnitTest/debug/
 Modbus-TCP/TCPSlaveUnitTest/debug/
 Modbus-RTU/RTUMasterUnitTest/debug/

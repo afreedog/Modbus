@@ -18,7 +18,7 @@
 #define WRITE_COIL_MAXNUM 1968  //请求报文写入线圈个数的最大值
 #define WRITE_REGISTER_MINNUM 1 //请求报文写入寄存器个数的最小值
 #define WRITE_REGISTER_MAXNUM 123 //请求报文写入寄存器个数的最大值
-#define RTU_MESSAGE_MAX_BYTE 256 //RTU报文最大长度
+#define RTU_MESSAGE_MAX_BYTE 255 //RTU报文最大长度
 #define MINIMUM_MESSAGE_LENGTH 8 //接收到的请求报文最小长度
 #define REQUEST_MESSAGE_LENGTH_0X01_0X03 8 //0X01或0X03请求报文长度
 #define ABNORMAL_RESPONSE_LENGTH 5  //异常响应报文长度
@@ -158,9 +158,9 @@ public:
     //显示接收报文
     void ShowResponseMessage(QByteArray responseMessage);
     //将16进制线圈数据转换为2进制字符串
-    QString CoilsByteArrayToQString(QByteArray DataArray,quint16 DataNumber);
+    QString HexByteArrayToBinString(QByteArray DataArray,quint16 DataNumber);
     //将16进制寄存器转化为10进制字符串
-    QString RegistersByteArrayToQString(QByteArray DataArray);
+    QString HexByteArrayToDecString(QByteArray DataArray);
 
     //写入单个线圈或寄存器
     void WriteCoilsData(int Column,QString CoilData);

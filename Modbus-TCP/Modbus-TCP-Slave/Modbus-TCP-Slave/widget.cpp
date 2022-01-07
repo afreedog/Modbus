@@ -367,9 +367,11 @@ void Widget::ShowResponseMessage(QByteArray MessageArray)
     //ui->messageBox->append("请求报文地址："+MasterIpAddress + ":"+QString::number(MasterPortNumber));
     ui->messageBox->append("响应报文内容："+res);
 }
+
 //解析请求报文
 bool Widget::TcpRequestMessageAnalysis(QByteArray MessageArray)
 {
+
     bool AnalysisResult=false;
 
     //异常判断
@@ -461,6 +463,7 @@ bool Widget::TcpRequestMessageAnalysis(QByteArray MessageArray)
     }
     return AnalysisResult;
 }
+
 
 //0x01 0x03 生成正常响应报文 并调用报文发送函数
 bool Widget::AnalysisMessage0X010X03(QByteArray MessageArray)
@@ -560,6 +563,11 @@ bool Widget::AnalysisMessage0X0f0X10(QByteArray MessageArray)
     //0x10
     //字节数
     //数据项和字节字段
+    if(MessageArray.size() < TCP_MIN_LENGTH)
+    {
+        ui->messageBox->append("请求报文长度错误！");
+        return false;
+    }
     quint8 AbnormalFunctionCode;
     QByteArray AbnormalResponseMessage;
     //判断顺序：
@@ -1013,8 +1021,6 @@ QByteArray Widget::NormalResponseMessageBuild0X010X03(QByteArray MessageArray,QB
     }
     return RespondeMessageArr;
 }
-//异常报文判断
-
 
 //异常报文生成
 QByteArray Widget::AbnormalMessageBuild(QByteArray MessageArray,quint8 AbnormalFunctionCode)
@@ -1051,14 +1057,21 @@ QByteArray Widget::AbnormalMessageBuild(QByteArray MessageArray,quint8 AbnormalF
 //异常报文发送
 void Widget::AbnormalMessageSend(QByteArray Message)
 {
-      tcpReceiveSocket->write(Message);
+      if(TcpServerConnectState)
+      {
+          tcpReceiveSocket->write(Message);
+      }
 }
 
 //正常报文响应发送
 void Widget::NormalResponseMessageSend(QByteArray MessageArray)
 {
-    tcpReceiveSocket->write(MessageArray);
-    ShowResponseMessage(MessageArray);
+    if(TcpServerConnectState)
+    {
+        tcpReceiveSocket->write(MessageArray);
+        ShowResponseMessage(MessageArray);
+    }
+
 }
 
 //字节翻转函数
