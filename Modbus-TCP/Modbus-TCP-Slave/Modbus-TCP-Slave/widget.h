@@ -27,6 +27,7 @@
 
 #define INIFILE_PATH "Data.ini"  //数据文件路径
 #define RECORD_PATH  "record.txt"
+
 #define MAXSLAVENUMBER 247  //从机地址最大数
 #define CLOCK_REFRESH 500   //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss" //时间显示格式
