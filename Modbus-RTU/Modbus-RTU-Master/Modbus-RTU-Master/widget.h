@@ -4,8 +4,8 @@
 #include "historymessagedialog.h"
 #include "inputdatadialog.h"
 
-#define INI_FILE_PATH "../Modbus-RTU-Master/Data.ini"  //数据文件路径
-#define RECORD_PATH "../Modbus-RTU-Master/record.txt" //日志文件路径
+#define INI_FILE_PATH "../Data/Data.ini"  //数据文件路径
+#define RECORD_PATH "../Log/record.txt" //日志文件路径
 #define CLOCK_REFRESH 500  //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss ddd"  //时钟显示格式
 #define ADDRESS_MIN 0  //线圈和寄存器的地址最小值

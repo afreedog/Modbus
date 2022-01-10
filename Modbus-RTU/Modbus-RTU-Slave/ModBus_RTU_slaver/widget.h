@@ -2,8 +2,8 @@
 #define WIDGET_H
 
 //Macro
-#define INIFILE_PATH "../ModBus_RTU_slaver/Data.ini"  //数据文件路径
-#define RECORD_PATH  "../ModBus_RTU_slaver/record.txt"
+#define INIFILE_PATH "../Data/Data.ini"  //数据文件路径
+#define RECORD_PATH  "../Log/record.txt" //操作日志文件
 
 #define CLOCK_REFRESH 500  //时钟刷新时间
 #define CLOCK_FORMAT "yyyy-MM-dd hh:mm:ss dddd"  //时钟显示格式

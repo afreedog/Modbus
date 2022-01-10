@@ -40,7 +40,7 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,15,3">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0,1,0,0,1,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0,1,0,0,1">
        <item>
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
@@ -134,19 +134,6 @@
           <string>清除窗口</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_13">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </item>
